@@ -38,7 +38,7 @@
             // 
             this.BtnStartUpGun.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.BtnStartUpGun.Image = ((System.Drawing.Image)(resources.GetObject("BtnStartUpGun.Image")));
-            this.BtnStartUpGun.Location = new System.Drawing.Point(228, 84);
+            this.BtnStartUpGun.Location = new System.Drawing.Point(12, 12);
             this.BtnStartUpGun.Name = "BtnStartUpGun";
             this.BtnStartUpGun.Size = new System.Drawing.Size(32, 32);
             this.BtnStartUpGun.TabIndex = 0;
@@ -47,9 +47,9 @@
             // 
             // BtnUpload
             // 
-            this.BtnUpload.Location = new System.Drawing.Point(362, 211);
+            this.BtnUpload.Location = new System.Drawing.Point(435, 269);
             this.BtnUpload.Name = "BtnUpload";
-            this.BtnUpload.Size = new System.Drawing.Size(100, 25);
+            this.BtnUpload.Size = new System.Drawing.Size(137, 25);
             this.BtnUpload.TabIndex = 3;
             this.BtnUpload.Text = "Upload";
             this.BtnUpload.UseVisualStyleBackColor = true;
@@ -57,16 +57,16 @@
             // checkedListBox1
             // 
             this.checkedListBox1.FormattingEnabled = true;
-            this.checkedListBox1.Location = new System.Drawing.Point(66, 166);
+            this.checkedListBox1.Location = new System.Drawing.Point(12, 50);
             this.checkedListBox1.Name = "checkedListBox1";
-            this.checkedListBox1.Size = new System.Drawing.Size(260, 139);
+            this.checkedListBox1.Size = new System.Drawing.Size(417, 244);
             this.checkedListBox1.TabIndex = 4;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.ClientSize = new System.Drawing.Size(584, 461);
             this.Controls.Add(this.checkedListBox1);
             this.Controls.Add(this.BtnUpload);

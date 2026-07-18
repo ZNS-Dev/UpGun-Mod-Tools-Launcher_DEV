@@ -42,6 +42,7 @@
             this.BtnSelectPak = new System.Windows.Forms.Button();
             this.PathPak = new System.Windows.Forms.TextBox();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.lblPourcentage = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // textBox1
@@ -61,6 +62,7 @@
             // 
             this.textBox2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.textBox2.Location = new System.Drawing.Point(141, 195);
+            this.textBox2.MaxLength = 255;
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(216, 20);
             this.textBox2.TabIndex = 3;
@@ -69,6 +71,7 @@
             // 
             this.textBox3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.textBox3.Location = new System.Drawing.Point(141, 221);
+            this.textBox3.MaxLength = 30000;
             this.textBox3.Name = "textBox3";
             this.textBox3.Size = new System.Drawing.Size(216, 20);
             this.textBox3.TabIndex = 5;
@@ -91,7 +94,7 @@
             this.textBox5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.textBox5.Location = new System.Drawing.Point(110, 247);
             this.textBox5.Name = "textBox5";
-            this.textBox5.Size = new System.Drawing.Size(155, 20);
+            this.textBox5.Size = new System.Drawing.Size(210, 20);
             this.textBox5.TabIndex = 7;
             // 
             // textBox6
@@ -111,7 +114,7 @@
             // button1
             // 
             this.button1.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.button1.Location = new System.Drawing.Point(271, 247);
+            this.button1.Location = new System.Drawing.Point(326, 247);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(31, 20);
             this.button1.TabIndex = 8;
@@ -144,18 +147,21 @@
             this.checkedListBox1.CheckOnClick = true;
             this.checkedListBox1.FormattingEnabled = true;
             this.checkedListBox1.Items.AddRange(new object[] {
-            "Mod",
-            "Weapon",
-            "WIP",
-            "Map",
-            "UI",
-            "K4T-O-DIK",
-            "Game Mode",
-            "Audio",
             "Animation",
-            "Model",
+            "Audio",
+            "Armor",
+            "Character",
+            "Gamemode",
             "Knife",
-            "Upgrade"});
+            "Face",
+            "Map",
+            "Mod",
+            "Model",
+            "UI",
+            "Upgrade",
+            "Settings",
+            "Weapon",
+            "WIP"});
             this.checkedListBox1.Location = new System.Drawing.Point(110, 273);
             this.checkedListBox1.Name = "checkedListBox1";
             this.checkedListBox1.Size = new System.Drawing.Size(155, 124);
@@ -169,6 +175,7 @@
             this.BtnSelectPak.TabIndex = 12;
             this.BtnSelectPak.Text = "Select File Pak";
             this.BtnSelectPak.UseVisualStyleBackColor = true;
+            this.BtnSelectPak.Click += new System.EventHandler(this.BtnSelectPak_Click);
             // 
             // PathPak
             // 
@@ -185,12 +192,21 @@
             this.progressBar1.Size = new System.Drawing.Size(100, 23);
             this.progressBar1.TabIndex = 14;
             // 
+            // lblPourcentage
+            // 
+            this.lblPourcentage.Location = new System.Drawing.Point(174, 77);
+            this.lblPourcentage.Name = "lblPourcentage";
+            this.lblPourcentage.Size = new System.Drawing.Size(100, 20);
+            this.lblPourcentage.TabIndex = 15;
+            // 
             // Form2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.AutoSize = true;
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.ClientSize = new System.Drawing.Size(384, 461);
+            this.Controls.Add(this.lblPourcentage);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.PathPak);
             this.Controls.Add(this.BtnSelectPak);
@@ -227,5 +243,6 @@
         private System.Windows.Forms.Button BtnSelectPak;
         private System.Windows.Forms.TextBox PathPak;
         private System.Windows.Forms.ProgressBar progressBar1;
+        private System.Windows.Forms.TextBox lblPourcentage;
     }
 }

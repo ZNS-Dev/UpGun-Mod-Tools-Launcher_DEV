@@ -14,7 +14,7 @@ namespace UpGun_Mods_Tool_Launcher
 {
     public partial class Form2 : Form
     {
-        private const uint APP_ID_CIBLE = 311210;
+        private uint m_AppIdCible;
 
         private string SelectFileIcon = "";
         private string dossierTemporaireUpload = "";
@@ -30,32 +30,18 @@ namespace UpGun_Mods_Tool_Launcher
         {
             InitializeComponent();
 
-            // Sécurité sur la fermeture
             this.FormClosing -= Form2_FormClosing;
             this.FormClosing += Form2_FormClosing;
 
-            // 🛠️ REMÈDE ANTI-BUG DU DESIGNER : On injecte les Tags directement par le code.
-            if (checkedListBox1.Items.Count == 0)
-            {
-                checkedListBox1.Items.AddRange(new object[] {
-                    "Map",
-                    "Mod",
-                    "Skin",
-                    "Gamemode",
-                    "Weapon",
-                    "Other"
-                });
-            }
-
-            // 🔒 NETTOYAGE DES DOUBLONS : On fait -= puis += pour détruire les doubles lancements
-            try { this.BtnSelectPak.Click -= this.BtnSelectPak_Click; this.BtnSelectPak.Click += this.BtnSelectPak_Click; } catch { }
-            try { this.button1.Click -= this.button1_Click; this.button1.Click += this.button1_Click; } catch { }
-            try { this.button2.Click -= this.button2_Click; this.button2.Click += this.button2_Click; } catch { }
-            try { this.button3.Click -= this.button3_Click; this.button3.Click += this.button3_Click; } catch { }
+            this.BtnSelectPak.Click -= this.BtnSelectPak_Click; this.BtnSelectPak.Click += this.BtnSelectPak_Click;
+            this.button1.Click -= this.button1_Click; this.button1.Click += this.button1_Click;
+            this.button2.Click -= this.button2_Click; this.button2.Click += this.button2_Click;
+            this.button3.Click -= this.button3_Click; this.button3.Click += this.button3_Click;
         }
 
-        public Form2(string titreMod, string descriptionMod, string tagsMod, PublishedFileId_t fileId) : this()
+        public Form2(uint appIdCible, string titreMod, string descriptionMod, string tagsMod, PublishedFileId_t fileId) : this()
         {
+            m_AppIdCible = appIdCible;
             m_FileId = fileId;
             m_SubmitItemUpdate = CallResult<SubmitItemUpdateResult_t>.Create(OnItemUpdateCompleted);
             m_CreateItem = CallResult<CreateItemResult_t>.Create(OnItemCreateCompleted);
@@ -74,7 +60,6 @@ namespace UpGun_Mods_Tool_Launcher
                 button3.Text = "Update Map";
             }
 
-            // Cocher automatiquement les tags récupérés depuis Steam
             if (!string.IsNullOrEmpty(tagsMod))
             {
                 string[] listeTagsSteam = tagsMod.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
@@ -95,6 +80,10 @@ namespace UpGun_Mods_Tool_Launcher
 
             progressBar1.Value = 0;
             progressBar1.Maximum = 100;
+            if (lblPourcentage != null)
+            {
+                lblPourcentage.Text = "0%";
+            }
         }
 
         private void BtnSelectPak_Click(object sender, EventArgs e)
@@ -129,14 +118,14 @@ namespace UpGun_Mods_Tool_Launcher
             }
 
             progressBar1.Value = 0;
+            if (lblPourcentage != null) lblPourcentage.Text = "0%";
             button3.Enabled = false;
 
             if (estUneCreation)
             {
-                AppId_t appId = new AppId_t(APP_ID_CIBLE);
+                AppId_t appId = new AppId_t(m_AppIdCible);
                 SteamAPICall_t apiCall = SteamUGC.CreateItem(appId, EWorkshopFileType.k_EWorkshopFileTypeCommunity);
                 m_CreateItem.Set(apiCall);
-                MessageBox.Show("Enregistrement de la nouvelle map sur Steam... Veuillez patienter.", "Création", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else
             {
@@ -161,7 +150,7 @@ namespace UpGun_Mods_Tool_Launcher
         {
             try
             {
-                AppId_t appId = new AppId_t(APP_ID_CIBLE);
+                AppId_t appId = new AppId_t(m_AppIdCible);
                 m_CurrentUpdateHandle = SteamUGC.StartItemUpdate(appId, m_FileId);
 
                 SteamUGC.SetItemTitle(m_CurrentUpdateHandle, textBox2.Text);
@@ -196,7 +185,7 @@ namespace UpGun_Mods_Tool_Launcher
                 }
                 SteamUGC.SetItemTags(m_CurrentUpdateHandle, tagsCoches);
 
-                SteamAPICall_t apiCall = SteamUGC.SubmitItemUpdate(m_CurrentUpdateHandle, "Mise à jour via BO3 Mods Tool");
+                SteamAPICall_t apiCall = SteamUGC.SubmitItemUpdate(m_CurrentUpdateHandle, "Mise à jour via UpGun Mods Tool");
                 m_SubmitItemUpdate.Set(apiCall);
 
                 progressTimer = new Timer();
@@ -221,9 +210,17 @@ namespace UpGun_Mods_Tool_Launcher
             if (bytesTotal > 0)
             {
                 int pourcentage = (int)((bytesProcessed * 100) / bytesTotal);
+
                 if (pourcentage > 100) pourcentage = 100;
                 if (pourcentage < 0) pourcentage = 0;
+
                 progressBar1.Value = pourcentage;
+
+                if (lblPourcentage != null)
+                {
+                    lblPourcentage.Text = pourcentage + "%";
+                    lblPourcentage.Update();
+                }
             }
         }
 
@@ -237,13 +234,31 @@ namespace UpGun_Mods_Tool_Launcher
             if (bIOFailure || callback.m_eResult != EResult.k_EResultOK)
             {
                 progressBar1.Value = 0;
+                if (lblPourcentage != null) lblPourcentage.Text = "0%";
                 MessageBox.Show("Échec de l'opération sur Steam. Code : " + callback.m_eResult, "Erreur Steam", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else
             {
                 progressBar1.Value = 100;
-                string messageSucces = estUneCreation ? "Nouvelle map publiée avec succès sur le Workshop !" : "Map mise à jour avec succès !";
-                MessageBox.Show(messageSucces, "Succès !", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                if (lblPourcentage != null) lblPourcentage.Text = "100%";
+
+                string actionTexte = estUneCreation ? "publiée avec succès" : "mise à jour avec succès";
+                string messageQuestion = $"{textBox2.Text} a été {actionTexte} !\n\nVoulez-vous ouvrir la page sur Steam pour voir votre mod ?";
+
+                DialogResult reponse = MessageBox.Show(messageQuestion, "Succès !", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+
+                if (reponse == DialogResult.Yes)
+                {
+                    try
+                    {
+                        string urlSteamWorkshop = "steam://url/CommunityFilePage/" + m_FileId.m_PublishedFileId;
+                        System.Diagnostics.Process.Start(urlSteamWorkshop);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Impossible d'ouvrir l'application Steam : " + ex.Message, "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                }
 
                 this.DialogResult = DialogResult.OK;
                 this.Close();
@@ -266,8 +281,6 @@ namespace UpGun_Mods_Tool_Launcher
         {
             NettoyerDossierTemporaire();
         }
-
-        private void listBox1_SelectedIndexChanged(object sender, EventArgs e) { }
 
         private void button1_Click(object sender, EventArgs e)
         {

@@ -15,10 +15,9 @@ namespace UpGun_Mods_Tool_Launcher
 {
     public partial class Form1 : Form
     {
-        // 🆔 ID unique du jeu cible (311210 pour BO3)
-        private const uint APP_ID_CIBLE = 311210;
+        // 🆔 ID unique du jeu cible gravé directement dans le code (plus de fichier TXT)
+        private const uint APP_ID_CIBLE = 480;
 
-        private string SelectFilePak = "";
         private CallResult<SteamUGCQueryCompleted_t> m_SteamUGCQueryCompleted;
         private Timer steamTimer;
 
@@ -27,14 +26,11 @@ namespace UpGun_Mods_Tool_Launcher
             InitializeComponent();
             this.FormClosing += Form1_FormClosing;
 
-            // 🛠️ SÉCURITÉ FORCEE : On recâble l'événement de chargement si le Designer l'a fait sauter
             this.Load += new System.EventHandler(this.Form1_Load);
-
-            // Sécurité pour la sélection de la liste
             this.checkedListBox1.SelectedIndexChanged += new System.EventHandler(this.checkedListBox1_SelectedIndexChanged);
 
-            // Sécurité pour le bouton d'upload (liaison directe avec le nom exact de ton bouton)
-            try { this.BtnUpload.Click += new System.EventHandler(this.BtnUpload_Click_1); } catch { }
+            this.BtnUpload.Click -= new System.EventHandler(this.BtnUpload_Click_1);
+            this.BtnUpload.Click += new System.EventHandler(this.BtnUpload_Click_1);
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -125,14 +121,7 @@ namespace UpGun_Mods_Tool_Launcher
 
         private void MettreAJourTexteBouton()
         {
-            if (checkedListBox1.SelectedItem != null)
-            {
-                BtnUpload.Text = "Update";
-            }
-            else
-            {
-                BtnUpload.Text = "Upload";
-            }
+            BtnUpload.Text = (checkedListBox1.SelectedItem != null) ? "Update" : "Upload";
         }
 
         private void BtnUpload_Click_1(object sender, EventArgs e)
@@ -141,11 +130,11 @@ namespace UpGun_Mods_Tool_Launcher
 
             if (checkedListBox1.SelectedItem is WorkshopItem modSelectionne)
             {
-                form2 = new Form2(modSelectionne.Title, modSelectionne.Description, modSelectionne.Tags, modSelectionne.FileId);
+                form2 = new Form2(APP_ID_CIBLE, modSelectionne.Title, modSelectionne.Description, modSelectionne.Tags, modSelectionne.FileId);
             }
             else
             {
-                form2 = new Form2("", "", "", PublishedFileId_t.Invalid);
+                form2 = new Form2(APP_ID_CIBLE, "", "", "", PublishedFileId_t.Invalid);
             }
 
             if (form2.ShowDialog() == DialogResult.OK)
@@ -156,7 +145,7 @@ namespace UpGun_Mods_Tool_Launcher
 
         private void BtnStartUpGun_Click(object sender, EventArgs e)
         {
-            Process.Start("steam://rungameid/1575870");
+            Process.Start("steam://rungameid/" + APP_ID_CIBLE);
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
