@@ -30,9 +30,8 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.BtnStartUpGun = new System.Windows.Forms.Button();
-            this.BtnSelectPak = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
             this.BtnUpload = new System.Windows.Forms.Button();
+            this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
             this.SuspendLayout();
             // 
             // BtnStartUpGun
@@ -46,24 +45,6 @@
             this.BtnStartUpGun.UseVisualStyleBackColor = true;
             this.BtnStartUpGun.Click += new System.EventHandler(this.BtnStartUpGun_Click);
             // 
-            // BtnSelectPak
-            // 
-            this.BtnSelectPak.Location = new System.Drawing.Point(362, 180);
-            this.BtnSelectPak.Name = "BtnSelectPak";
-            this.BtnSelectPak.Size = new System.Drawing.Size(100, 25);
-            this.BtnSelectPak.TabIndex = 1;
-            this.BtnSelectPak.Text = "Select File Pak";
-            this.BtnSelectPak.UseVisualStyleBackColor = true;
-            this.BtnSelectPak.Click += new System.EventHandler(this.BtnUpload_Click);
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(12, 273);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.ReadOnly = true;
-            this.textBox1.Size = new System.Drawing.Size(557, 20);
-            this.textBox1.TabIndex = 2;
-            // 
             // BtnUpload
             // 
             this.BtnUpload.Location = new System.Drawing.Point(362, 211);
@@ -72,7 +53,14 @@
             this.BtnUpload.TabIndex = 3;
             this.BtnUpload.Text = "Upload";
             this.BtnUpload.UseVisualStyleBackColor = true;
-            this.BtnUpload.Click += new System.EventHandler(this.BtnUpload_Click_1);
+            // 
+            // checkedListBox1
+            // 
+            this.checkedListBox1.FormattingEnabled = true;
+            this.checkedListBox1.Location = new System.Drawing.Point(66, 166);
+            this.checkedListBox1.Name = "checkedListBox1";
+            this.checkedListBox1.Size = new System.Drawing.Size(260, 139);
+            this.checkedListBox1.TabIndex = 4;
             // 
             // Form1
             // 
@@ -80,24 +68,21 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.WindowFrame;
             this.ClientSize = new System.Drawing.Size(584, 461);
+            this.Controls.Add(this.checkedListBox1);
             this.Controls.Add(this.BtnUpload);
-            this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.BtnSelectPak);
             this.Controls.Add(this.BtnStartUpGun);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "Form1";
             this.Text = "UpGun Mod Tools Launcher";
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
 
         private System.Windows.Forms.Button BtnStartUpGun;
-        private System.Windows.Forms.Button BtnSelectPak;
-        private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Button BtnUpload;
+        private System.Windows.Forms.CheckedListBox checkedListBox1;
     }
 }

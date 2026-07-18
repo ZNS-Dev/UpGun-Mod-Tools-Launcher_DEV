@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form2));
-            this.listBox1 = new System.Windows.Forms.ListBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.textBox3 = new System.Windows.Forms.TextBox();
@@ -39,30 +38,11 @@
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
+            this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
+            this.BtnSelectPak = new System.Windows.Forms.Button();
+            this.PathPak = new System.Windows.Forms.TextBox();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.SuspendLayout();
-            // 
-            // listBox1
-            // 
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.Items.AddRange(new object[] {
-            "Mod",
-            "Weapon",
-            "WIP",
-            "Map",
-            "UI",
-            "K4T-O-DIK",
-            "Game Mode",
-            "Audio",
-            "Animation",
-            "Model",
-            "Knife",
-            "Upgrade"});
-            this.listBox1.Location = new System.Drawing.Point(110, 273);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.listBox1.Size = new System.Drawing.Size(155, 121);
-            this.listBox1.TabIndex = 0;
-            this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
             // 
             // textBox1
             // 
@@ -70,7 +50,7 @@
             this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.textBox1.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.textBox1.ForeColor = System.Drawing.Color.White;
-            this.textBox1.Location = new System.Drawing.Point(218, 87);
+            this.textBox1.Location = new System.Drawing.Point(72, 195);
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
             this.textBox1.Size = new System.Drawing.Size(35, 20);
@@ -79,14 +59,16 @@
             // 
             // textBox2
             // 
-            this.textBox2.Location = new System.Drawing.Point(71, 12);
+            this.textBox2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.textBox2.Location = new System.Drawing.Point(141, 195);
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(216, 20);
             this.textBox2.TabIndex = 3;
             // 
             // textBox3
             // 
-            this.textBox3.Location = new System.Drawing.Point(71, 50);
+            this.textBox3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.textBox3.Location = new System.Drawing.Point(141, 221);
             this.textBox3.Name = "textBox3";
             this.textBox3.Size = new System.Drawing.Size(216, 20);
             this.textBox3.TabIndex = 5;
@@ -97,15 +79,16 @@
             this.textBox4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.textBox4.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.textBox4.ForeColor = System.Drawing.Color.White;
-            this.textBox4.Location = new System.Drawing.Point(262, 114);
+            this.textBox4.Location = new System.Drawing.Point(72, 221);
             this.textBox4.Name = "textBox4";
             this.textBox4.ReadOnly = true;
-            this.textBox4.Size = new System.Drawing.Size(67, 20);
+            this.textBox4.Size = new System.Drawing.Size(63, 20);
             this.textBox4.TabIndex = 4;
             this.textBox4.Text = "Description:";
             // 
             // textBox5
             // 
+            this.textBox5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.textBox5.Location = new System.Drawing.Point(110, 247);
             this.textBox5.Name = "textBox5";
             this.textBox5.Size = new System.Drawing.Size(155, 20);
@@ -154,6 +137,53 @@
             this.button3.TabIndex = 10;
             this.button3.Text = "Publish Mod";
             this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
+            // 
+            // checkedListBox1
+            // 
+            this.checkedListBox1.CheckOnClick = true;
+            this.checkedListBox1.FormattingEnabled = true;
+            this.checkedListBox1.Items.AddRange(new object[] {
+            "Mod",
+            "Weapon",
+            "WIP",
+            "Map",
+            "UI",
+            "K4T-O-DIK",
+            "Game Mode",
+            "Audio",
+            "Animation",
+            "Model",
+            "Knife",
+            "Upgrade"});
+            this.checkedListBox1.Location = new System.Drawing.Point(110, 273);
+            this.checkedListBox1.Name = "checkedListBox1";
+            this.checkedListBox1.Size = new System.Drawing.Size(155, 124);
+            this.checkedListBox1.TabIndex = 11;
+            // 
+            // BtnSelectPak
+            // 
+            this.BtnSelectPak.Location = new System.Drawing.Point(35, 43);
+            this.BtnSelectPak.Name = "BtnSelectPak";
+            this.BtnSelectPak.Size = new System.Drawing.Size(100, 25);
+            this.BtnSelectPak.TabIndex = 12;
+            this.BtnSelectPak.Text = "Select File Pak";
+            this.BtnSelectPak.UseVisualStyleBackColor = true;
+            // 
+            // PathPak
+            // 
+            this.PathPak.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.PathPak.Location = new System.Drawing.Point(86, 103);
+            this.PathPak.Name = "PathPak";
+            this.PathPak.Size = new System.Drawing.Size(216, 20);
+            this.PathPak.TabIndex = 13;
+            // 
+            // progressBar1
+            // 
+            this.progressBar1.Location = new System.Drawing.Point(190, 43);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(100, 23);
+            this.progressBar1.TabIndex = 14;
             // 
             // Form2
             // 
@@ -161,6 +191,10 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.WindowFrame;
             this.ClientSize = new System.Drawing.Size(384, 461);
+            this.Controls.Add(this.progressBar1);
+            this.Controls.Add(this.PathPak);
+            this.Controls.Add(this.BtnSelectPak);
+            this.Controls.Add(this.checkedListBox1);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
@@ -170,7 +204,6 @@
             this.Controls.Add(this.textBox4);
             this.Controls.Add(this.textBox2);
             this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.listBox1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form2";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -181,8 +214,6 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.ListBox listBox1;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.TextBox textBox3;
@@ -192,5 +223,9 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.CheckedListBox checkedListBox1;
+        private System.Windows.Forms.Button BtnSelectPak;
+        private System.Windows.Forms.TextBox PathPak;
+        private System.Windows.Forms.ProgressBar progressBar1;
     }
 }

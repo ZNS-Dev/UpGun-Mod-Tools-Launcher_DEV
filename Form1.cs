@@ -9,16 +9,149 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Steamworks;
 
 namespace UpGun_Mods_Tool_Launcher
 {
     public partial class Form1 : Form
     {
+        // 🆔 ID unique du jeu cible (311210 pour BO3)
+        private const uint APP_ID_CIBLE = 311210;
+
         private string SelectFilePak = "";
+        private CallResult<SteamUGCQueryCompleted_t> m_SteamUGCQueryCompleted;
+        private Timer steamTimer;
 
         public Form1()
         {
             InitializeComponent();
+            this.FormClosing += Form1_FormClosing;
+
+            // 🛠️ SÉCURITÉ FORCEE : On recâble l'événement de chargement si le Designer l'a fait sauter
+            this.Load += new System.EventHandler(this.Form1_Load);
+
+            // Sécurité pour la sélection de la liste
+            this.checkedListBox1.SelectedIndexChanged += new System.EventHandler(this.checkedListBox1_SelectedIndexChanged);
+
+            // Sécurité pour le bouton d'upload (liaison directe avec le nom exact de ton bouton)
+            try { this.BtnUpload.Click += new System.EventHandler(this.BtnUpload_Click_1); } catch { }
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            ChargerWorkshopSteam();
+            MettreAJourTexteBouton();
+        }
+
+        private void ChargerWorkshopSteam()
+        {
+            try
+            {
+                if (SteamAPI.Init())
+                {
+                    if (steamTimer == null)
+                    {
+                        steamTimer = new Timer();
+                        steamTimer.Interval = 100;
+                        steamTimer.Tick += (s, e) => SteamAPI.RunCallbacks();
+                        steamTimer.Start();
+                    }
+
+                    m_SteamUGCQueryCompleted = CallResult<SteamUGCQueryCompleted_t>.Create(OnWorkshopQueryCompleted);
+
+                    AppId_t jeuCible = new AppId_t(APP_ID_CIBLE);
+
+                    UGCQueryHandle_t handle = SteamUGC.CreateQueryUserUGCRequest(
+                        SteamUser.GetSteamID().GetAccountID(),
+                        EUserUGCList.k_EUserUGCList_Published,
+                        EUGCMatchingUGCType.k_EUGCMatchingUGCType_Items,
+                        EUserUGCListSortOrder.k_EUserUGCListSortOrder_CreationOrderDesc,
+                        AppId_t.Invalid,
+                        jeuCible,
+                        1
+                    );
+
+                    SteamAPICall_t apiCall = SteamUGC.SendQueryUGCRequest(handle);
+                    m_SteamUGCQueryCompleted.Set(apiCall);
+                }
+                else
+                {
+                    MessageBox.Show("Impossible de se connecter à Steam. Vérifiez que Steam est ouvert et que vous êtes connecté.", "Erreur Steam", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erreur SDK Steamworks : " + ex.Message, "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void OnWorkshopQueryCompleted(SteamUGCQueryCompleted_t callback, bool bIOFailure)
+        {
+            checkedListBox1.Items.Clear();
+
+            if (bIOFailure || callback.m_eResult != EResult.k_EResultOK)
+            {
+                MessageBox.Show("Erreur Workshop Steam (Code : " + callback.m_eResult + ")", "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (callback.m_unNumResultsReturned > 0)
+            {
+                for (uint i = 0; i < callback.m_unNumResultsReturned; i++)
+                {
+                    SteamUGCDetails_t details;
+                    if (SteamUGC.GetQueryUGCResult(callback.m_handle, i, out details))
+                    {
+                        WorkshopItem item = new WorkshopItem
+                        {
+                            Title = details.m_rgchTitle,
+                            Description = details.m_rgchDescription,
+                            Tags = details.m_rgchTags,
+                            FileId = details.m_nPublishedFileId
+                        };
+                        checkedListBox1.Items.Add(item);
+                    }
+                }
+            }
+
+            SteamUGC.ReleaseQueryUGCRequest(callback.m_handle);
+            MettreAJourTexteBouton();
+        }
+
+        private void checkedListBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            MettreAJourTexteBouton();
+        }
+
+        private void MettreAJourTexteBouton()
+        {
+            if (checkedListBox1.SelectedItem != null)
+            {
+                BtnUpload.Text = "Update";
+            }
+            else
+            {
+                BtnUpload.Text = "Upload";
+            }
+        }
+
+        private void BtnUpload_Click_1(object sender, EventArgs e)
+        {
+            Form2 form2;
+
+            if (checkedListBox1.SelectedItem is WorkshopItem modSelectionne)
+            {
+                form2 = new Form2(modSelectionne.Title, modSelectionne.Description, modSelectionne.Tags, modSelectionne.FileId);
+            }
+            else
+            {
+                form2 = new Form2("", "", "", PublishedFileId_t.Invalid);
+            }
+
+            if (form2.ShowDialog() == DialogResult.OK)
+            {
+                ChargerWorkshopSteam();
+            }
         }
 
         private void BtnStartUpGun_Click(object sender, EventArgs e)
@@ -26,46 +159,27 @@ namespace UpGun_Mods_Tool_Launcher
             Process.Start("steam://rungameid/1575870");
         }
 
-        private void BtnUpload_Click(object sender, EventArgs e)
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            if (steamTimer != null)
             {
-                openFileDialog.Title = "Select pak to upload";
-                openFileDialog.InitialDirectory = "c:\\";
-                openFileDialog.Filter = "Pak File (*.pak)|*.pak";
-                openFileDialog.FilterIndex = 1;
-                openFileDialog.RestoreDirectory = true;
-
-                if (openFileDialog.ShowDialog() == DialogResult.OK)
-                {
-                    SelectFilePak = openFileDialog.FileName;
-
-                    textBox1.Text = SelectFilePak;
-
-                    try
-                    {
-                        string nomFichier = Path.GetFileName(SelectFilePak);
-                        string dossierMods = Path.Combine(Application.StartupPath, "Mods");
-
-                        if (!Directory.Exists(dossierMods))
-                        {
-                            Directory.CreateDirectory(dossierMods);
-                        }
-
-                        string cheminFinal = Path.Combine(dossierMods, nomFichier);
-                        File.Copy(SelectFilePak, cheminFinal, true);
-                    }
-                    catch (Exception)
-                    {
-                    }
-                }
+                steamTimer.Stop();
+                steamTimer.Dispose();
             }
+            SteamAPI.Shutdown();
         }
+    }
 
-        private void BtnUpload_Click_1(object sender, EventArgs e)
+    public class WorkshopItem
+    {
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public string Tags { get; set; }
+        public PublishedFileId_t FileId { get; set; }
+
+        public override string ToString()
         {
-            Form2 form2 = new Form2();
-            form2.Show();
+            return string.IsNullOrEmpty(Title) ? "Mod sans titre (ID: " + FileId.m_PublishedFileId + ")" : Title;
         }
     }
 }
