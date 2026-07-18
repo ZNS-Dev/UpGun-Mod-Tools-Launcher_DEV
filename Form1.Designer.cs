@@ -48,9 +48,9 @@
             // 
             // BtnSelectPak
             // 
-            this.BtnSelectPak.Location = new System.Drawing.Point(565, 197);
+            this.BtnSelectPak.Location = new System.Drawing.Point(362, 180);
             this.BtnSelectPak.Name = "BtnSelectPak";
-            this.BtnSelectPak.Size = new System.Drawing.Size(127, 23);
+            this.BtnSelectPak.Size = new System.Drawing.Size(100, 25);
             this.BtnSelectPak.TabIndex = 1;
             this.BtnSelectPak.Text = "Select File Pak";
             this.BtnSelectPak.UseVisualStyleBackColor = true;
@@ -58,17 +58,17 @@
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(115, 278);
+            this.textBox1.Location = new System.Drawing.Point(12, 273);
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
-            this.textBox1.Size = new System.Drawing.Size(577, 20);
+            this.textBox1.Size = new System.Drawing.Size(557, 20);
             this.textBox1.TabIndex = 2;
             // 
             // BtnUpload
             // 
-            this.BtnUpload.Location = new System.Drawing.Point(565, 226);
+            this.BtnUpload.Location = new System.Drawing.Point(362, 211);
             this.BtnUpload.Name = "BtnUpload";
-            this.BtnUpload.Size = new System.Drawing.Size(127, 23);
+            this.BtnUpload.Size = new System.Drawing.Size(100, 25);
             this.BtnUpload.TabIndex = 3;
             this.BtnUpload.Text = "Upload";
             this.BtnUpload.UseVisualStyleBackColor = true;
@@ -79,14 +79,15 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.WindowFrame;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(584, 461);
             this.Controls.Add(this.BtnUpload);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.BtnSelectPak);
             this.Controls.Add(this.BtnStartUpGun);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "UpGun Mod Tools Launcher";
             this.ResumeLayout(false);
             this.PerformLayout();
 
