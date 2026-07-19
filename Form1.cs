@@ -4,8 +4,8 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
-using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices; // 🌟 Indispensable pour l'injection native
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -15,8 +15,12 @@ namespace UpGun_Mods_Tool_Launcher
 {
     public partial class Form1 : Form
     {
-        // 🆔 ID unique du jeu cible gravé directement dans le code (plus de fichier TXT)
-        private const uint APP_ID_CIBLE = 311210;
+        // 🆔 L'ID unique de Steam gravé dans le code
+        private const uint APP_ID_CIBLE = 480;
+
+        // 🚀 L'arme secrète : On importe la fonction native de Windows pour forcer l'ID en mémoire
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        private static extern bool SetEnvironmentVariable(string lpName, string lpValue);
 
         private CallResult<SteamUGCQueryCompleted_t> m_SteamUGCQueryCompleted;
         private Timer steamTimer;
@@ -43,6 +47,10 @@ namespace UpGun_Mods_Tool_Launcher
         {
             try
             {
+                // 🪄 INJECTION DIRECTE : On force l'ID dans le kernel Windows pour le processus actuel.
+                // La DLL de Steam (steam_api.dll) est obligée de le lire ici, rendant le fichier TXT inutile !
+                SetEnvironmentVariable("SteamAppId", APP_ID_CIBLE.ToString());
+
                 if (SteamAPI.Init())
                 {
                     if (steamTimer == null)
@@ -57,13 +65,14 @@ namespace UpGun_Mods_Tool_Launcher
 
                     AppId_t jeuCible = new AppId_t(APP_ID_CIBLE);
 
+                    // Requête utilisateur globale pour récupérer TOUS tes items associés à cet ID
                     UGCQueryHandle_t handle = SteamUGC.CreateQueryUserUGCRequest(
                         SteamUser.GetSteamID().GetAccountID(),
                         EUserUGCList.k_EUserUGCList_Published,
-                        EUGCMatchingUGCType.k_EUGCMatchingUGCType_Items,
+                        EUGCMatchingUGCType.k_EUGCMatchingUGCType_All, // 'All' pour ne rater aucun type d'item
                         EUserUGCListSortOrder.k_EUserUGCListSortOrder_CreationOrderDesc,
                         AppId_t.Invalid,
-                        jeuCible,
+                        jeuCible, // Cible l'ID du jeu pour filtrer tes items
                         1
                     );
 
@@ -72,7 +81,7 @@ namespace UpGun_Mods_Tool_Launcher
                 }
                 else
                 {
-                    MessageBox.Show("Impossible de se connecter à Steam. Vérifiez que Steam est ouvert et que vous êtes connecté.", "Erreur Steam", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show($"Impossible de se connecter à Steam.\nVérifiez que Steam est lancé en arrière-plan.", "Erreur Steam", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             catch (Exception ex)
@@ -156,6 +165,7 @@ namespace UpGun_Mods_Tool_Launcher
                 steamTimer.Dispose();
             }
             SteamAPI.Shutdown();
+            // Plus aucun code de nettoyage de fichier ici, le dossier reste impeccable.
         }
     }
 

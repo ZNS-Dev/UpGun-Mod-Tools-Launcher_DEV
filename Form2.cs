@@ -80,10 +80,7 @@ namespace UpGun_Mods_Tool_Launcher
 
             progressBar1.Value = 0;
             progressBar1.Maximum = 100;
-            if (lblPourcentage != null)
-            {
-                lblPourcentage.Text = "0%";
-            }
+            if (lblPourcentage != null) lblPourcentage.Text = "0%";
         }
 
         private void BtnSelectPak_Click(object sender, EventArgs e)
@@ -91,9 +88,7 @@ namespace UpGun_Mods_Tool_Launcher
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
                 openFileDialog.Title = "Sélectionner le fichier du mod (.pak)";
-                openFileDialog.InitialDirectory = "c:\\";
                 openFileDialog.Filter = "Fichier Pak (*.pak)|*.pak";
-                openFileDialog.FilterIndex = 1;
                 openFileDialog.RestoreDirectory = true;
 
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
@@ -107,13 +102,13 @@ namespace UpGun_Mods_Tool_Launcher
         {
             if (string.IsNullOrEmpty(PathPak.Text) || !File.Exists(PathPak.Text) || Path.GetExtension(PathPak.Text).ToLower() != ".pak")
             {
-                MessageBox.Show("Erreur : Vous devez obligatoirement sélectionner un fichier de Mod valide (.pak) avant de publier !", "Fichier .pak manquant", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Erreur : Fichier .pak invalide !", "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
             if (string.IsNullOrEmpty(textBox2.Text.Trim()))
             {
-                MessageBox.Show("Veuillez donner un titre à votre map.", "Titre manquant", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Veuillez donner un titre.", "Titre manquant", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -138,7 +133,7 @@ namespace UpGun_Mods_Tool_Launcher
             if (bIOFailure || callback.m_eResult != EResult.k_EResultOK)
             {
                 button3.Enabled = true;
-                MessageBox.Show("Impossible de créer l'article sur le Workshop Steam. Code : " + callback.m_eResult, "Erreur Steam", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Échec création Workshop. Code : " + callback.m_eResult, "Erreur Steam", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -157,10 +152,6 @@ namespace UpGun_Mods_Tool_Launcher
                 SteamUGC.SetItemDescription(m_CurrentUpdateHandle, textBox3.Text);
 
                 dossierTemporaireUpload = Path.Combine(Path.GetTempPath(), "UpGun_Upload_" + Guid.NewGuid().ToString("N"));
-                if (Directory.Exists(dossierTemporaireUpload))
-                {
-                    Directory.Delete(dossierTemporaireUpload, true);
-                }
                 Directory.CreateDirectory(dossierTemporaireUpload);
 
                 string nomDuPak = Path.GetFileName(PathPak.Text);
@@ -185,7 +176,7 @@ namespace UpGun_Mods_Tool_Launcher
                 }
                 SteamUGC.SetItemTags(m_CurrentUpdateHandle, tagsCoches);
 
-                SteamAPICall_t apiCall = SteamUGC.SubmitItemUpdate(m_CurrentUpdateHandle, "Mise à jour via UpGun Mods Tool");
+                SteamAPICall_t apiCall = SteamUGC.SubmitItemUpdate(m_CurrentUpdateHandle, "Mise à jour");
                 m_SubmitItemUpdate.Set(apiCall);
 
                 progressTimer = new Timer();
@@ -197,7 +188,7 @@ namespace UpGun_Mods_Tool_Launcher
             {
                 NettoyerDossierTemporaire();
                 button3.Enabled = true;
-                MessageBox.Show("Erreur lors de la préparation de l'envoi : " + ex.Message, "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Erreur préparation : " + ex.Message, "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -210,17 +201,11 @@ namespace UpGun_Mods_Tool_Launcher
             if (bytesTotal > 0)
             {
                 int pourcentage = (int)((bytesProcessed * 100) / bytesTotal);
-
                 if (pourcentage > 100) pourcentage = 100;
                 if (pourcentage < 0) pourcentage = 0;
 
                 progressBar1.Value = pourcentage;
-
-                if (lblPourcentage != null)
-                {
-                    lblPourcentage.Text = pourcentage + "%";
-                    lblPourcentage.Update();
-                }
+                if (lblPourcentage != null) lblPourcentage.Text = pourcentage + "%";
             }
         }
 
@@ -228,36 +213,21 @@ namespace UpGun_Mods_Tool_Launcher
         {
             progressTimer?.Stop();
             button3.Enabled = true;
-
             NettoyerDossierTemporaire();
 
             if (bIOFailure || callback.m_eResult != EResult.k_EResultOK)
             {
-                progressBar1.Value = 0;
-                if (lblPourcentage != null) lblPourcentage.Text = "0%";
-                MessageBox.Show("Échec de l'opération sur Steam. Code : " + callback.m_eResult, "Erreur Steam", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Échec sur Steam. Code : " + callback.m_eResult, "Erreur Steam", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else
             {
                 progressBar1.Value = 100;
                 if (lblPourcentage != null) lblPourcentage.Text = "100%";
 
-                string actionTexte = estUneCreation ? "publiée avec succès" : "mise à jour avec succès";
-                string messageQuestion = $"{textBox2.Text} a été {actionTexte} !\n\nVoulez-vous ouvrir la page sur Steam pour voir votre mod ?";
-
-                DialogResult reponse = MessageBox.Show(messageQuestion, "Succès !", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
-
+                DialogResult reponse = MessageBox.Show("Opération réussie ! Ouvrir la page ?", "Succès", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
                 if (reponse == DialogResult.Yes)
                 {
-                    try
-                    {
-                        string urlSteamWorkshop = "steam://url/CommunityFilePage/" + m_FileId.m_PublishedFileId;
-                        System.Diagnostics.Process.Start(urlSteamWorkshop);
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Impossible d'ouvrir l'application Steam : " + ex.Message, "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    }
+                    System.Diagnostics.Process.Start("steam://url/CommunityFilePage/" + m_FileId.m_PublishedFileId);
                 }
 
                 this.DialogResult = DialogResult.OK;
@@ -277,19 +247,14 @@ namespace UpGun_Mods_Tool_Launcher
             catch { }
         }
 
-        private void Form2_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            NettoyerDossierTemporaire();
-        }
+        private void Form2_FormClosing(object sender, FormClosingEventArgs e) => NettoyerDossierTemporaire();
 
         private void button1_Click(object sender, EventArgs e)
         {
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
                 openFileDialog.Title = "Sélectionner l'icône du mod";
-                openFileDialog.InitialDirectory = "c:\\";
                 openFileDialog.Filter = "Fichiers Image (*.png;*.jpg;*.jpeg)|*.png;*.jpg;*.jpeg";
-                openFileDialog.FilterIndex = 1;
                 openFileDialog.RestoreDirectory = true;
 
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
