@@ -1,4 +1,4 @@
-﻿namespace UpGun_Mods_Tool_Launcher
+﻿namespace UpGun_Mod_Tools_Launcher
 {
     partial class Form2
     {
@@ -39,8 +39,8 @@
             this.BtnCloseWindowPublish = new System.Windows.Forms.Button();
             this.BtnPublishMod = new System.Windows.Forms.Button();
             this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
-            this.BtnSelectPak = new System.Windows.Forms.Button();
             this.PathPak = new System.Windows.Forms.TextBox();
+            this.BtnSelectPak = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // textBox1
@@ -92,6 +92,7 @@
             this.textBox5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.textBox5.Location = new System.Drawing.Point(110, 247);
             this.textBox5.Name = "textBox5";
+            this.textBox5.ReadOnly = true;
             this.textBox5.Size = new System.Drawing.Size(210, 20);
             this.textBox5.TabIndex = 7;
             // 
@@ -166,24 +167,25 @@
             this.checkedListBox1.TabIndex = 0;
             this.checkedListBox1.TabStop = false;
             // 
-            // BtnSelectPak
-            // 
-            this.BtnSelectPak.Location = new System.Drawing.Point(7, 127);
-            this.BtnSelectPak.Name = "BtnSelectPak";
-            this.BtnSelectPak.Size = new System.Drawing.Size(100, 25);
-            this.BtnSelectPak.TabIndex = 12;
-            this.BtnSelectPak.Text = "Select File Pak";
-            this.BtnSelectPak.UseVisualStyleBackColor = true;
-            this.BtnSelectPak.Click += new System.EventHandler(this.BtnSelectPak_Click);
-            // 
             // PathPak
             // 
             this.PathPak.AllowDrop = true;
             this.PathPak.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.PathPak.Location = new System.Drawing.Point(113, 131);
             this.PathPak.Name = "PathPak";
+            this.PathPak.ReadOnly = true;
             this.PathPak.Size = new System.Drawing.Size(216, 20);
             this.PathPak.TabIndex = 13;
+            // 
+            // BtnSelectPak
+            // 
+            this.BtnSelectPak.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.BtnSelectPak.Location = new System.Drawing.Point(335, 131);
+            this.BtnSelectPak.Name = "BtnSelectPak";
+            this.BtnSelectPak.Size = new System.Drawing.Size(31, 20);
+            this.BtnSelectPak.TabIndex = 14;
+            this.BtnSelectPak.Text = "...";
+            this.BtnSelectPak.UseVisualStyleBackColor = true;
             // 
             // Form2
             // 
@@ -192,8 +194,8 @@
             this.AutoSize = true;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.ClientSize = new System.Drawing.Size(384, 461);
-            this.Controls.Add(this.PathPak);
             this.Controls.Add(this.BtnSelectPak);
+            this.Controls.Add(this.PathPak);
             this.Controls.Add(this.checkedListBox1);
             this.Controls.Add(this.BtnPublishMod);
             this.Controls.Add(this.BtnCloseWindowPublish);
@@ -224,7 +226,7 @@
         private System.Windows.Forms.Button BtnCloseWindowPublish;
         private System.Windows.Forms.Button BtnPublishMod;
         private System.Windows.Forms.CheckedListBox checkedListBox1;
-        private System.Windows.Forms.Button BtnSelectPak;
         private System.Windows.Forms.TextBox PathPak;
+        private System.Windows.Forms.Button BtnSelectPak;
     }
 }

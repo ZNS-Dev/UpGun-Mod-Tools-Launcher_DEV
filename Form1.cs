@@ -3,7 +3,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
-namespace UpGun_Mods_Tool_Launcher
+namespace UpGun_Mod_Tools_Launcher
 {
     public partial class Form1 : Form
     {
@@ -74,7 +74,7 @@ namespace UpGun_Mods_Tool_Launcher
 
             if (bIOFailure || callback.m_eResult != EResult.k_EResultOK)
             {
-                MessageBox.Show("Erreur Workshop Steam (Code : " + callback.m_eResult + ")", "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Error Workshop Steam (Code : " + callback.m_eResult + ")", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 

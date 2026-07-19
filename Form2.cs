@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace UpGun_Mods_Tool_Launcher
+namespace UpGun_Mod_Tools_Launcher
 {
     public partial class Form2 : Form
     {
@@ -86,13 +86,13 @@ namespace UpGun_Mods_Tool_Launcher
         {
             if (string.IsNullOrEmpty(PathPak.Text) || !File.Exists(PathPak.Text) || Path.GetExtension(PathPak.Text).ToLower() != ".pak")
             {
-                MessageBox.Show("Erreur : Fichier .pak invalide !", "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error : Invalid pak file!", "Error file pak", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
             if (string.IsNullOrEmpty(textBox2.Text.Trim()))
             {
-                MessageBox.Show("Veuillez donner un titre.", "Titre manquant", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Please make title for you mod.", "Missing title", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -104,7 +104,13 @@ namespace UpGun_Mods_Tool_Launcher
             }
             else
             {
-                this.Enabled = false;
+                BtnSelectPak.Enabled = false;
+                textBox2.Enabled = false;
+                textBox3.Enabled = false;
+                BtnSelectIcon.Enabled = false;
+                checkedListBox1.Enabled = false;
+                BtnPublishMod.Enabled = false;
+                BtnCloseWindowPublish.Enabled = false;
                 DemarrerSoumissionWorkshop();
             }
         }

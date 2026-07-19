@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace UpGun_Mods_Tool_Launcher
+namespace UpGun_Mod_Tools_Launcher
 {
     internal static class Program
     {

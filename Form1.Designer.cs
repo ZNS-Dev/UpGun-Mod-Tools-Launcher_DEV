@@ -1,4 +1,4 @@
-﻿namespace UpGun_Mods_Tool_Launcher
+﻿namespace UpGun_Mod_Tools_Launcher
 {
     partial class Form1
     {
