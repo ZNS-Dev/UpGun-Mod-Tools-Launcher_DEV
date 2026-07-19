@@ -51,9 +51,8 @@
     <ApplicationIcon>ModLauncher.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Steamworks.NET, Version=2025.163.0.0, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Debug\Steamworks.NET.dll</HintPath>
+    <Reference Include="Steamworks.NET">
+      <HintPath>Libs\Steamworks.NET.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -113,8 +112,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include=".gitignore" />
     <Content Include="ModLauncher.ico" />
+    <Content Include="Steamworks.NET.dll" />
+    <Content Include="steam_api.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,0 +1,13 @@
+C:\Users\ZNS\source\repos\UpGun Mod Tools Launcher\bin\Debug\UpGun Mod Tools Launcher.exe.config
+C:\Users\ZNS\source\repos\UpGun Mod Tools Launcher\bin\Debug\UpGun Mod Tools Launcher.exe
+C:\Users\ZNS\source\repos\UpGun Mod Tools Launcher\bin\Debug\UpGun Mod Tools Launcher.pdb
+C:\Users\ZNS\source\repos\UpGun Mod Tools Launcher\bin\Debug\Steamworks.NET.dll
+C:\Users\ZNS\source\repos\UpGun Mod Tools Launcher\obj\Debug\UpGun Mod Tools Launcher.csproj.AssemblyReference.cache
+C:\Users\ZNS\source\repos\UpGun Mod Tools Launcher\obj\Debug\UpGun_Mods_Tool_Launcher.Form1.resources
+C:\Users\ZNS\source\repos\UpGun Mod Tools Launcher\obj\Debug\UpGun_Mods_Tool_Launcher.Form2.resources
+C:\Users\ZNS\source\repos\UpGun Mod Tools Launcher\obj\Debug\UpGun_Mod_Tools_Launcher.Properties.Resources.resources
+C:\Users\ZNS\source\repos\UpGun Mod Tools Launcher\obj\Debug\UpGun Mod Tools Launcher.csproj.GenerateResource.cache
+C:\Users\ZNS\source\repos\UpGun Mod Tools Launcher\obj\Debug\UpGun Mod Tools Launcher.csproj.CoreCompileInputs.cache
+C:\Users\ZNS\source\repos\UpGun Mod Tools Launcher\obj\Debug\UpGun Mo.C5ED713E.Up2Date
+C:\Users\ZNS\source\repos\UpGun Mod Tools Launcher\obj\Debug\UpGun Mod Tools Launcher.exe
+C:\Users\ZNS\source\repos\UpGun Mod Tools Launcher\obj\Debug\UpGun Mod Tools Launcher.pdb

@@ -16,7 +16,7 @@ namespace UpGun_Mods_Tool_Launcher
     public partial class Form1 : Form
     {
         // 🆔 ID unique du jeu cible gravé directement dans le code (plus de fichier TXT)
-        private const uint APP_ID_CIBLE = 480;
+        private const uint APP_ID_CIBLE = 311210;
 
         private CallResult<SteamUGCQueryCompleted_t> m_SteamUGCQueryCompleted;
         private Timer steamTimer;
