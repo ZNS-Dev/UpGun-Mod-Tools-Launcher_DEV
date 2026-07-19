@@ -21,8 +21,6 @@ namespace UpGun_Mods_Tool_Launcher
         public Form2()
         {
             InitializeComponent();
-            this.FormClosing -= Form2_FormClosing;
-            this.FormClosing += Form2_FormClosing;
             this.BtnSelectPak.Click -= this.BtnSelectPak_Click; this.BtnSelectPak.Click += this.BtnSelectPak_Click;
             this.BtnSelectIcon.Click -= this.BtnSelectIcon_Click; this.BtnSelectIcon.Click += this.BtnSelectIcon_Click;
             this.BtnCloseWindowPublish.Click -= this.BtnCloseWindowPublish_Click; this.BtnCloseWindowPublish.Click += this.BtnCloseWindowPublish_Click;
@@ -42,12 +40,12 @@ namespace UpGun_Mods_Tool_Launcher
             if (m_FileId == PublishedFileId_t.Invalid)
             {
                 estUneCreation = true;
-                BtnPublishMod.Text = "Publish New Map";
+                BtnPublishMod.Text = "Publish Mod";
             }
             else
             {
                 estUneCreation = false;
-                BtnPublishMod.Text = "Update Map";
+                BtnPublishMod.Text = "Update Mod";
             }
 
             if (!string.IsNullOrEmpty(tagsMod))
@@ -67,17 +65,14 @@ namespace UpGun_Mods_Tool_Launcher
                     }
                 }
             }
-
-            progressBar1.Value = 0;
-            progressBar1.Maximum = 100;
         }
 
         private void BtnSelectPak_Click(object sender, EventArgs e)
         {
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
-                openFileDialog.Title = "Sélectionner le fichier du mod (.pak)";
-                openFileDialog.Filter = "Fichier Pak (*.pak)|*.pak";
+                openFileDialog.Title = "Select pak file (.pak)";
+                openFileDialog.Filter = "Pak file (*.pak)|*.pak";
                 openFileDialog.RestoreDirectory = true;
 
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
@@ -101,9 +96,6 @@ namespace UpGun_Mods_Tool_Launcher
                 return;
             }
 
-            progressBar1.Value = 0;
-            BtnPublishMod.Enabled = false;
-
             if (estUneCreation)
             {
                 AppId_t appId = new AppId_t(m_AppIdCible);
@@ -112,6 +104,7 @@ namespace UpGun_Mods_Tool_Launcher
             }
             else
             {
+                this.Enabled = false;
                 DemarrerSoumissionWorkshop();
             }
         }
@@ -169,29 +162,14 @@ namespace UpGun_Mods_Tool_Launcher
             }
             catch (Exception ex)
             {
-                NettoyerDossierTemporaire();
                 BtnPublishMod.Enabled = true;
                 MessageBox.Show("Erreur préparation : " + ex.Message, "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private void ProgressTimer_Tick(object sender, EventArgs e)
-        {
-            SteamUGC.GetItemUpdateProgress(m_CurrentUpdateHandle, out ulong bytesProcessed, out ulong bytesTotal);
-
-            if (bytesTotal > 0)
-            {
-                int pourcentage = (int)((bytesProcessed * 100) / bytesTotal);
-                if (pourcentage > 100) pourcentage = 100;
-                if (pourcentage < 0) pourcentage = 0;
-                progressBar1.Value = pourcentage;
             }
         }
 
         private void OnItemUpdateCompleted(SubmitItemUpdateResult_t callback, bool bIOFailure)
         {
             BtnPublishMod.Enabled = true;
-            NettoyerDossierTemporaire();
 
             if (bIOFailure || callback.m_eResult != EResult.k_EResultOK)
             {
@@ -199,7 +177,6 @@ namespace UpGun_Mods_Tool_Launcher
             }
             else
             {
-                progressBar1.Value = 100;
                 DialogResult reponse = MessageBox.Show("Opération réussie ! Ouvrir la page ?", "Succès", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
                 if (reponse == DialogResult.Yes)
                 {
@@ -210,20 +187,6 @@ namespace UpGun_Mods_Tool_Launcher
                 this.Close();
             }
         }
-
-        private void NettoyerDossierTemporaire()
-        {
-            try
-            {
-                if (!string.IsNullOrEmpty(dossierTemporaireUpload) && Directory.Exists(dossierTemporaireUpload))
-                {
-                    Directory.Delete(dossierTemporaireUpload, true);
-                }
-            }
-            catch { }
-        }
-
-        private void Form2_FormClosing(object sender, FormClosingEventArgs e) => NettoyerDossierTemporaire();
 
         private void BtnSelectIcon_Click(object sender, EventArgs e)
         {

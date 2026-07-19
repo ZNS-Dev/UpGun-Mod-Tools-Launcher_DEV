@@ -10,7 +10,6 @@ namespace UpGun_Mods_Tool_Launcher
         private const uint APP_ID_CIBLE = 311210;
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern bool SetEnvironmentVariable(string lpName, string lpValue);
-
         private CallResult<SteamUGCQueryCompleted_t> m_SteamUGCQueryCompleted;
         private Timer steamTimer;
 
@@ -18,19 +17,13 @@ namespace UpGun_Mods_Tool_Launcher
         {
             InitializeComponent();
             this.FormClosing += Form1_FormClosing;
-
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ListBoxWorkshopItem.SelectedIndexChanged += new System.EventHandler(this.ListBoxWorkshopItem_SelectedIndexChanged);
-
             this.BtnUpload.Click -= new System.EventHandler(this.BtnUpload_Click_1);
             this.BtnUpload.Click += new System.EventHandler(this.BtnUpload_Click_1);
         }
 
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            ChargerWorkshopSteam();
-            MettreAJourTexteBouton();
-        }
+        private void Form1_Load(object sender, EventArgs e) => ChargerWorkshopSteam();
 
         private void ChargerWorkshopSteam()
         {
@@ -64,6 +57,9 @@ namespace UpGun_Mods_Tool_Launcher
                 else
                 {
                     MessageBox.Show($"Impossible de se connecter à Steam.\nVérifiez que Steam est lancé en arrière-plan.", "Erreur Steam", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    {
+                        Application.Exit();
+                    }
                 }
             }
             catch (Exception ex)
@@ -137,23 +133,20 @@ namespace UpGun_Mods_Tool_Launcher
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            ChargerWorkshopSteam();
-        }
-    }
+        private void button1_Click(object sender, EventArgs e) => ChargerWorkshopSteam();
 
-    public class WorkshopItem
-    {
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public string Tags { get; set; }
-        public PublishedFileId_t FileId { get; set; }
-
-        public override string ToString()
+        public class WorkshopItem
         {
-            string affichageTitre = string.IsNullOrEmpty(Title) ? "Mod sans titre" : Title;
-            return $"{affichageTitre}";
+            public string Title { get; set; }
+            public string Description { get; set; }
+            public string Tags { get; set; }
+            public PublishedFileId_t FileId { get; set; }
+
+            public override string ToString()
+            {
+                string affichageTitre = string.IsNullOrEmpty(Title) ? "NO TITLE!" : Title;
+                return $"{affichageTitre}";
+            }
         }
     }
 }

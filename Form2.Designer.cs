@@ -41,7 +41,6 @@
             this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
             this.BtnSelectPak = new System.Windows.Forms.Button();
             this.PathPak = new System.Windows.Forms.TextBox();
-            this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.SuspendLayout();
             // 
             // textBox1
@@ -163,7 +162,9 @@
             this.checkedListBox1.Location = new System.Drawing.Point(110, 273);
             this.checkedListBox1.Name = "checkedListBox1";
             this.checkedListBox1.Size = new System.Drawing.Size(155, 124);
-            this.checkedListBox1.TabIndex = 11;
+            this.checkedListBox1.Sorted = true;
+            this.checkedListBox1.TabIndex = 0;
+            this.checkedListBox1.TabStop = false;
             // 
             // BtnSelectPak
             // 
@@ -177,18 +178,12 @@
             // 
             // PathPak
             // 
+            this.PathPak.AllowDrop = true;
             this.PathPak.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.PathPak.Location = new System.Drawing.Point(113, 131);
             this.PathPak.Name = "PathPak";
             this.PathPak.Size = new System.Drawing.Size(216, 20);
             this.PathPak.TabIndex = 13;
-            // 
-            // progressBar1
-            // 
-            this.progressBar1.Location = new System.Drawing.Point(12, 429);
-            this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(360, 23);
-            this.progressBar1.TabIndex = 14;
             // 
             // Form2
             // 
@@ -197,7 +192,6 @@
             this.AutoSize = true;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.ClientSize = new System.Drawing.Size(384, 461);
-            this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.PathPak);
             this.Controls.Add(this.BtnSelectPak);
             this.Controls.Add(this.checkedListBox1);
@@ -232,6 +226,5 @@
         private System.Windows.Forms.CheckedListBox checkedListBox1;
         private System.Windows.Forms.Button BtnSelectPak;
         private System.Windows.Forms.TextBox PathPak;
-        private System.Windows.Forms.ProgressBar progressBar1;
     }
 }

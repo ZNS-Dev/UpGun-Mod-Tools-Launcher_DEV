@@ -30,12 +30,13 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.BtnUpload = new System.Windows.Forms.Button();
-            this.ListBoxWorkshopItem = new System.Windows.Forms.CheckedListBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.BtnRefreshList = new System.Windows.Forms.Button();
+            this.ListBoxWorkshopItem = new System.Windows.Forms.ListBox();
             this.SuspendLayout();
             // 
             // BtnUpload
             // 
+            this.BtnUpload.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.BtnUpload.Location = new System.Drawing.Point(12, 300);
             this.BtnUpload.Name = "BtnUpload";
             this.BtnUpload.Size = new System.Drawing.Size(210, 25);
@@ -43,23 +44,30 @@
             this.BtnUpload.Text = "Upload";
             this.BtnUpload.UseVisualStyleBackColor = true;
             // 
+            // BtnRefreshList
+            // 
+            this.BtnRefreshList.Location = new System.Drawing.Point(227, 300);
+            this.BtnRefreshList.Name = "BtnRefreshList";
+            this.BtnRefreshList.Size = new System.Drawing.Size(210, 25);
+            this.BtnRefreshList.TabIndex = 5;
+            this.BtnRefreshList.Text = "Refresh List";
+            this.BtnRefreshList.UseVisualStyleBackColor = true;
+            this.BtnRefreshList.Click += new System.EventHandler(this.button1_Click);
+            // 
             // ListBoxWorkshopItem
             // 
+            this.ListBoxWorkshopItem.BackColor = System.Drawing.Color.Gray;
+            this.ListBoxWorkshopItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ListBoxWorkshopItem.ForeColor = System.Drawing.SystemColors.Window;
             this.ListBoxWorkshopItem.FormattingEnabled = true;
-            this.ListBoxWorkshopItem.Location = new System.Drawing.Point(12, 50);
+            this.ListBoxWorkshopItem.ItemHeight = 16;
+            this.ListBoxWorkshopItem.Location = new System.Drawing.Point(12, 17);
             this.ListBoxWorkshopItem.Name = "ListBoxWorkshopItem";
-            this.ListBoxWorkshopItem.Size = new System.Drawing.Size(560, 244);
-            this.ListBoxWorkshopItem.TabIndex = 4;
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(227, 300);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(210, 25);
-            this.button1.TabIndex = 5;
-            this.button1.Text = "Refresh List";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.ListBoxWorkshopItem.Size = new System.Drawing.Size(560, 276);
+            this.ListBoxWorkshopItem.Sorted = true;
+            this.ListBoxWorkshopItem.TabIndex = 0;
+            this.ListBoxWorkshopItem.TabStop = false;
+            this.ListBoxWorkshopItem.UseTabStops = false;
             // 
             // Form1
             // 
@@ -67,8 +75,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.ClientSize = new System.Drawing.Size(584, 461);
-            this.Controls.Add(this.button1);
             this.Controls.Add(this.ListBoxWorkshopItem);
+            this.Controls.Add(this.BtnRefreshList);
             this.Controls.Add(this.BtnUpload);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
@@ -80,7 +88,7 @@
 
         #endregion
         private System.Windows.Forms.Button BtnUpload;
-        private System.Windows.Forms.CheckedListBox ListBoxWorkshopItem;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button BtnRefreshList;
+        private System.Windows.Forms.ListBox ListBoxWorkshopItem;
     }
 }
