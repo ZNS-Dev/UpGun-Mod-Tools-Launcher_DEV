@@ -41,6 +41,8 @@
             this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
             this.PathPak = new System.Windows.Forms.TextBox();
             this.BtnSelectPak = new System.Windows.Forms.Button();
+            this.textBox7 = new System.Windows.Forms.TextBox();
+            this.textBox8 = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // textBox1
@@ -54,6 +56,7 @@
             this.textBox1.ReadOnly = true;
             this.textBox1.Size = new System.Drawing.Size(35, 20);
             this.textBox1.TabIndex = 1;
+            this.textBox1.TabStop = false;
             this.textBox1.Text = "Title:";
             // 
             // textBox2
@@ -85,6 +88,7 @@
             this.textBox4.ReadOnly = true;
             this.textBox4.Size = new System.Drawing.Size(63, 20);
             this.textBox4.TabIndex = 4;
+            this.textBox4.TabStop = false;
             this.textBox4.Text = "Description:";
             // 
             // textBox5
@@ -107,6 +111,7 @@
             this.textBox6.ReadOnly = true;
             this.textBox6.Size = new System.Drawing.Size(32, 20);
             this.textBox6.TabIndex = 6;
+            this.textBox6.TabStop = false;
             this.textBox6.Text = "Icon:";
             this.textBox6.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -187,6 +192,35 @@
             this.BtnSelectPak.Text = "...";
             this.BtnSelectPak.UseVisualStyleBackColor = true;
             // 
+            // textBox7
+            // 
+            this.textBox7.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.textBox7.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.textBox7.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.textBox7.ForeColor = System.Drawing.Color.White;
+            this.textBox7.Location = new System.Drawing.Point(72, 273);
+            this.textBox7.Name = "textBox7";
+            this.textBox7.ReadOnly = true;
+            this.textBox7.Size = new System.Drawing.Size(32, 20);
+            this.textBox7.TabIndex = 15;
+            this.textBox7.TabStop = false;
+            this.textBox7.Text = "Tags:";
+            this.textBox7.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // textBox8
+            // 
+            this.textBox8.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.textBox8.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.textBox8.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.textBox8.ForeColor = System.Drawing.Color.White;
+            this.textBox8.Location = new System.Drawing.Point(69, 133);
+            this.textBox8.Name = "textBox8";
+            this.textBox8.ReadOnly = true;
+            this.textBox8.Size = new System.Drawing.Size(35, 20);
+            this.textBox8.TabIndex = 16;
+            this.textBox8.TabStop = false;
+            this.textBox8.Text = "Pak:";
+            // 
             // Form2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -194,6 +228,8 @@
             this.AutoSize = true;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.ClientSize = new System.Drawing.Size(384, 461);
+            this.Controls.Add(this.textBox8);
+            this.Controls.Add(this.textBox7);
             this.Controls.Add(this.BtnSelectPak);
             this.Controls.Add(this.PathPak);
             this.Controls.Add(this.checkedListBox1);
@@ -228,5 +264,7 @@
         private System.Windows.Forms.CheckedListBox checkedListBox1;
         private System.Windows.Forms.TextBox PathPak;
         private System.Windows.Forms.Button BtnSelectPak;
+        private System.Windows.Forms.TextBox textBox7;
+        private System.Windows.Forms.TextBox textBox8;
     }
 }

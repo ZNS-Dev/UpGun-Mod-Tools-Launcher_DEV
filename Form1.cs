@@ -1,5 +1,6 @@
 ﻿using Steamworks;
 using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
@@ -7,7 +8,7 @@ namespace UpGun_Mod_Tools_Launcher
 {
     public partial class Form1 : Form
     {
-        private const uint APP_ID_CIBLE = 311210;
+        private const uint APP_ID_CIBLE = 1575870;
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern bool SetEnvironmentVariable(string lpName, string lpValue);
         private CallResult<SteamUGCQueryCompleted_t> m_SteamUGCQueryCompleted;
@@ -133,7 +134,7 @@ namespace UpGun_Mod_Tools_Launcher
             }
         }
 
-        private void button1_Click(object sender, EventArgs e) => ChargerWorkshopSteam();
+        private void BtnRefreshList_Click(object sender, EventArgs e) => ChargerWorkshopSteam();
 
         public class WorkshopItem
         {
@@ -148,5 +149,6 @@ namespace UpGun_Mod_Tools_Launcher
                 return $"{affichageTitre}";
             }
         }
+        private void upGunToolStripMenuItem_Click(object sender, EventArgs e) => Process.Start("https://discord.gg/9VKrCEbyAV");
     }
 }

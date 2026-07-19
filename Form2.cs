@@ -11,12 +11,12 @@ namespace UpGun_Mod_Tools_Launcher
     {
         private readonly uint m_AppIdCible;
         private string SelectFileIcon = "";
-        private string dossierTemporaireUpload = "";
         private PublishedFileId_t m_FileId;
         private readonly CallResult<SubmitItemUpdateResult_t> m_SubmitItemUpdate;
         private readonly CallResult<CreateItemResult_t> m_CreateItem;
         private UGCUpdateHandle_t m_CurrentUpdateHandle;
         private readonly bool estUneCreation = false;
+        private readonly string dossierEnvoiUnique = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DONT_DELETE");
 
         public Form2()
         {
@@ -67,6 +67,32 @@ namespace UpGun_Mod_Tools_Launcher
             }
         }
 
+        private void GererEtatInterface(bool actif)
+        {
+            BtnSelectPak.Enabled = actif;
+            textBox2.Enabled = actif;
+            textBox3.Enabled = actif;
+            BtnSelectIcon.Enabled = actif;
+            checkedListBox1.Enabled = actif;
+            BtnPublishMod.Enabled = actif;
+            BtnCloseWindowPublish.Enabled = actif;
+        }
+
+        private void NettoyerDossierPassage()
+        {
+            try
+            {
+                if (Directory.Exists(dossierEnvoiUnique))
+                {
+                    Directory.Delete(dossierEnvoiUnique, true);
+                }
+            }
+            catch
+            {
+                // Évite de faire crasher l'application si le dossier est verrouillé une demi-seconde par Windows
+            }
+        }
+
         private void BtnSelectPak_Click(object sender, EventArgs e)
         {
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
@@ -86,7 +112,7 @@ namespace UpGun_Mod_Tools_Launcher
         {
             if (string.IsNullOrEmpty(PathPak.Text) || !File.Exists(PathPak.Text) || Path.GetExtension(PathPak.Text).ToLower() != ".pak")
             {
-                MessageBox.Show("Error : Invalid pak file!", "Error file pak", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Invalid pak file!", "Error file pak", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -96,6 +122,24 @@ namespace UpGun_Mod_Tools_Launcher
                 return;
             }
 
+            if (!string.IsNullOrEmpty(SelectFileIcon))
+            {
+                if (!File.Exists(SelectFileIcon))
+                {
+                    MessageBox.Show("The selected icon was not found.", "Error icon", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                FileInfo imgInfo = new FileInfo(SelectFileIcon);
+                if (imgInfo.Length > 1024 * 1024)
+                {
+                    MessageBox.Show("The icon must not exceed 1MB.", "Error icon", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+            }
+
+            GererEtatInterface(false);
+
             if (estUneCreation)
             {
                 AppId_t appId = new AppId_t(m_AppIdCible);
@@ -104,13 +148,6 @@ namespace UpGun_Mod_Tools_Launcher
             }
             else
             {
-                BtnSelectPak.Enabled = false;
-                textBox2.Enabled = false;
-                textBox3.Enabled = false;
-                BtnSelectIcon.Enabled = false;
-                checkedListBox1.Enabled = false;
-                BtnPublishMod.Enabled = false;
-                BtnCloseWindowPublish.Enabled = false;
                 DemarrerSoumissionWorkshop();
             }
         }
@@ -119,8 +156,8 @@ namespace UpGun_Mod_Tools_Launcher
         {
             if (bIOFailure || callback.m_eResult != EResult.k_EResultOK)
             {
-                BtnPublishMod.Enabled = true;
-                MessageBox.Show("Échec création Workshop. Code : " + callback.m_eResult, "Erreur Steam", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                GererEtatInterface(true);
+                MessageBox.Show("Failed to create mod. Code: " + callback.m_eResult, "Error Steam", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -134,26 +171,24 @@ namespace UpGun_Mod_Tools_Launcher
             {
                 AppId_t appId = new AppId_t(m_AppIdCible);
                 m_CurrentUpdateHandle = SteamUGC.StartItemUpdate(appId, m_FileId);
-
                 SteamUGC.SetItemTitle(m_CurrentUpdateHandle, textBox2.Text);
                 SteamUGC.SetItemDescription(m_CurrentUpdateHandle, textBox3.Text);
 
-                dossierTemporaireUpload = Path.Combine(Path.GetTempPath(), "UpGun_Upload_" + Guid.NewGuid().ToString("N"));
-                Directory.CreateDirectory(dossierTemporaireUpload);
+                // ÉTAPE SÉCURITÉ : On nettoie et on recrée à neuf le mini dossier d'isolement
+                NettoyerDossierPassage();
+                Directory.CreateDirectory(dossierEnvoiUnique);
 
+                // On copie UNIQUEMENT le fichier .pak que tu as sélectionné
                 string nomDuPak = Path.GetFileName(PathPak.Text);
-                string cheminTemporairePak = Path.Combine(dossierTemporaireUpload, nomDuPak);
-                File.Copy(PathPak.Text, cheminTemporairePak, true);
+                string cheminSecurisePak = Path.Combine(dossierEnvoiUnique, nomDuPak);
+                File.Copy(PathPak.Text, cheminSecurisePak, true);
 
-                SteamUGC.SetItemContent(m_CurrentUpdateHandle, dossierTemporaireUpload);
+                // On donne ce dossier propre à Steam (il ne contient QUE ton .pak, plus aucun risque de dossier à 1.2 Go)
+                SteamUGC.SetItemContent(m_CurrentUpdateHandle, dossierEnvoiUnique);
 
                 if (!string.IsNullOrEmpty(SelectFileIcon) && File.Exists(SelectFileIcon))
                 {
-                    FileInfo imgInfo = new FileInfo(SelectFileIcon);
-                    if (imgInfo.Length <= 1024 * 1024)
-                    {
-                        SteamUGC.SetItemPreview(m_CurrentUpdateHandle, SelectFileIcon);
-                    }
+                    SteamUGC.SetItemPreview(m_CurrentUpdateHandle, SelectFileIcon);
                 }
 
                 List<string> tagsCoches = new List<string>();
@@ -168,14 +203,18 @@ namespace UpGun_Mod_Tools_Launcher
             }
             catch (Exception ex)
             {
-                BtnPublishMod.Enabled = true;
+                GererEtatInterface(true);
+                NettoyerDossierPassage(); // En cas de plantage, on efface tout de suite
                 MessageBox.Show("Erreur préparation : " + ex.Message, "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void OnItemUpdateCompleted(SubmitItemUpdateResult_t callback, bool bIOFailure)
         {
-            BtnPublishMod.Enabled = true;
+            GererEtatInterface(true);
+
+            // NETTOYAGE TOTAL : Steam a fini de lire les fichiers, on détruit instantanément le dossier d'envoi
+            NettoyerDossierPassage();
 
             if (bIOFailure || callback.m_eResult != EResult.k_EResultOK)
             {
@@ -198,8 +237,8 @@ namespace UpGun_Mod_Tools_Launcher
         {
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
-                openFileDialog.Title = "Sélectionner l'icône du mod";
-                openFileDialog.Filter = "Fichiers Image (*.png;*.jpg;*.jpeg)|*.png;*.jpg;*.jpeg";
+                openFileDialog.Title = "Select icon";
+                openFileDialog.Filter = "Icon file (*.png)|*.png";
                 openFileDialog.RestoreDirectory = true;
 
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
