@@ -19,8 +19,8 @@ namespace UpGun_Mod_Tools_Launcher
             this.FormClosing += Form1_FormClosing;
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ListBoxWorkshopItem.SelectedIndexChanged += new System.EventHandler(this.ListBoxWorkshopItem_SelectedIndexChanged);
-            this.BtnUpload.Click -= new System.EventHandler(this.BtnUpload_Click_1);
-            this.BtnUpload.Click += new System.EventHandler(this.BtnUpload_Click_1);
+            this.BtnUpload.Click -= new System.EventHandler(this.BtnUpload_Click);
+            this.BtnUpload.Click += new System.EventHandler(this.BtnUpload_Click);
         }
 
         private void Form1_Load(object sender, EventArgs e) => ChargerWorkshopSteam();
@@ -104,7 +104,7 @@ namespace UpGun_Mod_Tools_Launcher
 
         private void MettreAJourTexteBouton() => BtnUpload.Text = (ListBoxWorkshopItem.SelectedItem != null) ? "Update" : "Upload";
 
-        private void BtnUpload_Click_1(object sender, EventArgs e)
+        private void BtnUpload_Click(object sender, EventArgs e)
         {
             Form2 form2;
 
