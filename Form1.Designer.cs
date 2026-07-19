@@ -37,13 +37,16 @@
             this.upGunToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.upGunModdingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.BtnGithub = new System.Windows.Forms.ToolStripMenuItem();
+            this.startUpGunToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.textBox2 = new System.Windows.Forms.TextBox();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // BtnUpload
             // 
             this.BtnUpload.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.BtnUpload.Location = new System.Drawing.Point(12, 310);
+            this.BtnUpload.Location = new System.Drawing.Point(12, 289);
             this.BtnUpload.Name = "BtnUpload";
             this.BtnUpload.Size = new System.Drawing.Size(210, 25);
             this.BtnUpload.TabIndex = 3;
@@ -52,7 +55,7 @@
             // 
             // BtnRefreshList
             // 
-            this.BtnRefreshList.Location = new System.Drawing.Point(227, 310);
+            this.BtnRefreshList.Location = new System.Drawing.Point(336, 289);
             this.BtnRefreshList.Name = "BtnRefreshList";
             this.BtnRefreshList.Size = new System.Drawing.Size(210, 25);
             this.BtnRefreshList.TabIndex = 5;
@@ -67,9 +70,9 @@
             this.ListBoxWorkshopItem.ForeColor = System.Drawing.SystemColors.Window;
             this.ListBoxWorkshopItem.FormattingEnabled = true;
             this.ListBoxWorkshopItem.ItemHeight = 21;
-            this.ListBoxWorkshopItem.Location = new System.Drawing.Point(12, 27);
+            this.ListBoxWorkshopItem.Location = new System.Drawing.Point(12, 48);
             this.ListBoxWorkshopItem.Name = "ListBoxWorkshopItem";
-            this.ListBoxWorkshopItem.Size = new System.Drawing.Size(425, 256);
+            this.ListBoxWorkshopItem.Size = new System.Drawing.Size(534, 235);
             this.ListBoxWorkshopItem.Sorted = true;
             this.ListBoxWorkshopItem.TabIndex = 0;
             this.ListBoxWorkshopItem.TabStop = false;
@@ -79,7 +82,8 @@
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.BtnDiscordModding,
-            this.BtnGithub});
+            this.BtnGithub,
+            this.startUpGunToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(558, 24);
@@ -98,14 +102,14 @@
             // upGunToolStripMenuItem
             // 
             this.upGunToolStripMenuItem.Name = "upGunToolStripMenuItem";
-            this.upGunToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.upGunToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
             this.upGunToolStripMenuItem.Text = "UpGun";
             this.upGunToolStripMenuItem.Click += new System.EventHandler(this.upGunToolStripMenuItem_Click);
             // 
             // upGunModdingToolStripMenuItem
             // 
             this.upGunModdingToolStripMenuItem.Name = "upGunModdingToolStripMenuItem";
-            this.upGunModdingToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.upGunModdingToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
             this.upGunModdingToolStripMenuItem.Text = "UpGun Modding";
             // 
             // BtnGithub
@@ -113,6 +117,48 @@
             this.BtnGithub.Name = "BtnGithub";
             this.BtnGithub.Size = new System.Drawing.Size(55, 20);
             this.BtnGithub.Text = "Github";
+            // 
+            // startUpGunToolStripMenuItem
+            // 
+            this.startUpGunToolStripMenuItem.Name = "startUpGunToolStripMenuItem";
+            this.startUpGunToolStripMenuItem.Size = new System.Drawing.Size(83, 20);
+            this.startUpGunToolStripMenuItem.Text = "Start UpGun";
+            this.startUpGunToolStripMenuItem.Click += new System.EventHandler(this.startUpGunToolStripMenuItem_Click);
+            // 
+            // textBox1
+            // 
+            this.textBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBox1.ForeColor = System.Drawing.SystemColors.Window;
+            this.textBox1.Location = new System.Drawing.Point(12, 458);
+            this.textBox1.Multiline = true;
+            this.textBox1.Name = "textBox1";
+            this.textBox1.ReadOnly = true;
+            this.textBox1.ShortcutsEnabled = false;
+            this.textBox1.Size = new System.Drawing.Size(534, 31);
+            this.textBox1.TabIndex = 0;
+            this.textBox1.TabStop = false;
+            this.textBox1.Text = "WARNING! There’s a problem launching UpGun on Steam, you shouldn’t open it while " +
+    "the tool is open. Press Start UpGun or close the tool to launch it via Steam.";
+            this.textBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // textBox2
+            // 
+            this.textBox2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.textBox2.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBox2.ForeColor = System.Drawing.SystemColors.Window;
+            this.textBox2.Location = new System.Drawing.Point(12, 27);
+            this.textBox2.Multiline = true;
+            this.textBox2.Name = "textBox2";
+            this.textBox2.ReadOnly = true;
+            this.textBox2.ShortcutsEnabled = false;
+            this.textBox2.Size = new System.Drawing.Size(174, 19);
+            this.textBox2.TabIndex = 7;
+            this.textBox2.TabStop = false;
+            this.textBox2.Text = "UpGun Mod Tools Launcher";
+            this.textBox2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // Form1
             // 
@@ -122,6 +168,8 @@
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.ClientSize = new System.Drawing.Size(558, 501);
+            this.Controls.Add(this.textBox2);
+            this.Controls.Add(this.textBox1);
             this.Controls.Add(this.ListBoxWorkshopItem);
             this.Controls.Add(this.BtnRefreshList);
             this.Controls.Add(this.BtnUpload);
@@ -148,5 +196,8 @@
         private System.Windows.Forms.ToolStripMenuItem BtnGithub;
         private System.Windows.Forms.ToolStripMenuItem upGunToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem upGunModdingToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem startUpGunToolStripMenuItem;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox textBox2;
     }
 }

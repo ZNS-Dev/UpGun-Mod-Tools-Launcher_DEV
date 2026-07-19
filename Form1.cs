@@ -150,5 +150,50 @@ namespace UpGun_Mod_Tools_Launcher
             }
         }
         private void upGunToolStripMenuItem_Click(object sender, EventArgs e) => Process.Start("https://discord.gg/9VKrCEbyAV");
+
+        private void startUpGunToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // On s'assure que Steam tourne bien en arrière-plan
+            if (!SteamAPI.IsSteamRunning())
+            {
+                MessageBox.Show("Steam doit être lancé pour localiser le jeu.", "Erreur Steam", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            // On prépare l'ID de UpGun (1575870)
+            AppId_t appIdJeu = new AppId_t(APP_ID_CIBLE);
+
+            // Cette fonction magique interroge Steam pour avoir le dossier exact, peu importe le disque (C:, D:, E:, etc.)
+            uint tailleChemin = SteamApps.GetAppInstallDir(appIdJeu, out string dossierInstallation, 1024);
+
+            // Si Steam renvoie un chemin valide et que le dossier existe physiquement
+            if (tailleChemin > 0 && System.IO.Directory.Exists(dossierInstallation))
+            {
+                // On assemble proprement le chemin vers l'exécutable UpGun.exe
+                string cheminExe = System.IO.Path.Combine(dossierInstallation, "UpGun.exe");
+
+                // Sécurité : on vérifie que l'exe est bien là avant de tenter un lancement
+                if (System.IO.File.Exists(cheminExe))
+                {
+                    try
+                    {
+                        // On lance directement l'exécutable local !
+                        Process.Start(cheminExe);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Impossible de lancer le fichier exe : {ex.Message}", "Erreur de lancement", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show($"Le dossier du jeu a été trouvé, mais 'UpGun.exe' est introuvable à cet endroit :\n{cheminExe}", "Fichier introuvable", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Impossible de détecter le dossier d'installation de UpGun.\nVérifiez que le jeu est bien installé sur ce compte Steam.", "Erreur d'emplacement", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
     }
 }
