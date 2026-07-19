@@ -35,14 +35,13 @@
             this.textBox4 = new System.Windows.Forms.TextBox();
             this.textBox5 = new System.Windows.Forms.TextBox();
             this.textBox6 = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
+            this.BtnSelectIcon = new System.Windows.Forms.Button();
+            this.BtnCloseWindowPublish = new System.Windows.Forms.Button();
+            this.BtnPublishMod = new System.Windows.Forms.Button();
             this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
             this.BtnSelectPak = new System.Windows.Forms.Button();
             this.PathPak = new System.Windows.Forms.TextBox();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
-            this.lblPourcentage = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // textBox1
@@ -111,54 +110,54 @@
             this.textBox6.Text = "Icon:";
             this.textBox6.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // button1
+            // BtnSelectIcon
             // 
-            this.button1.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.button1.Location = new System.Drawing.Point(326, 247);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(31, 20);
-            this.button1.TabIndex = 8;
-            this.button1.Text = "...";
-            this.button1.UseVisualStyleBackColor = true;
+            this.BtnSelectIcon.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.BtnSelectIcon.Location = new System.Drawing.Point(326, 247);
+            this.BtnSelectIcon.Name = "BtnSelectIcon";
+            this.BtnSelectIcon.Size = new System.Drawing.Size(31, 20);
+            this.BtnSelectIcon.TabIndex = 8;
+            this.BtnSelectIcon.Text = "...";
+            this.BtnSelectIcon.UseVisualStyleBackColor = true;
             // 
-            // button2
+            // BtnCloseWindowPublish
             // 
-            this.button2.Location = new System.Drawing.Point(190, 400);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 9;
-            this.button2.Text = "Cancel";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.BtnCloseWindowPublish.Location = new System.Drawing.Point(190, 400);
+            this.BtnCloseWindowPublish.Name = "BtnCloseWindowPublish";
+            this.BtnCloseWindowPublish.Size = new System.Drawing.Size(75, 23);
+            this.BtnCloseWindowPublish.TabIndex = 9;
+            this.BtnCloseWindowPublish.Text = "Cancel";
+            this.BtnCloseWindowPublish.UseVisualStyleBackColor = true;
+            this.BtnCloseWindowPublish.Click += new System.EventHandler(this.BtnCloseWindowPublish_Click);
             // 
-            // button3
+            // BtnPublishMod
             // 
-            this.button3.Location = new System.Drawing.Point(110, 400);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(75, 23);
-            this.button3.TabIndex = 10;
-            this.button3.Text = "Publish Mod";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
+            this.BtnPublishMod.Location = new System.Drawing.Point(110, 400);
+            this.BtnPublishMod.Name = "BtnPublishMod";
+            this.BtnPublishMod.Size = new System.Drawing.Size(75, 23);
+            this.BtnPublishMod.TabIndex = 10;
+            this.BtnPublishMod.Text = "Publish Mod";
+            this.BtnPublishMod.UseVisualStyleBackColor = true;
+            this.BtnPublishMod.Click += new System.EventHandler(this.BtnPublishMod_Click);
             // 
             // checkedListBox1
             // 
             this.checkedListBox1.CheckOnClick = true;
             this.checkedListBox1.FormattingEnabled = true;
             this.checkedListBox1.Items.AddRange(new object[] {
+            "AK-Thodik",
             "Animation",
-            "Audio",
             "Armor",
+            "Audio",
             "Character",
+            "Face",
             "Gamemode",
             "Knife",
-            "Face",
             "Map",
-            "Mod",
             "Model",
+            "Settings",
             "UI",
             "Upgrade",
-            "Settings",
             "Weapon",
             "WIP"});
             this.checkedListBox1.Location = new System.Drawing.Point(110, 273);
@@ -168,7 +167,7 @@
             // 
             // BtnSelectPak
             // 
-            this.BtnSelectPak.Location = new System.Drawing.Point(35, 43);
+            this.BtnSelectPak.Location = new System.Drawing.Point(7, 127);
             this.BtnSelectPak.Name = "BtnSelectPak";
             this.BtnSelectPak.Size = new System.Drawing.Size(100, 25);
             this.BtnSelectPak.TabIndex = 12;
@@ -179,24 +178,17 @@
             // PathPak
             // 
             this.PathPak.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.PathPak.Location = new System.Drawing.Point(86, 103);
+            this.PathPak.Location = new System.Drawing.Point(113, 131);
             this.PathPak.Name = "PathPak";
             this.PathPak.Size = new System.Drawing.Size(216, 20);
             this.PathPak.TabIndex = 13;
             // 
             // progressBar1
             // 
-            this.progressBar1.Location = new System.Drawing.Point(190, 43);
+            this.progressBar1.Location = new System.Drawing.Point(12, 429);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(100, 23);
+            this.progressBar1.Size = new System.Drawing.Size(360, 23);
             this.progressBar1.TabIndex = 14;
-            // 
-            // lblPourcentage
-            // 
-            this.lblPourcentage.Location = new System.Drawing.Point(174, 77);
-            this.lblPourcentage.Name = "lblPourcentage";
-            this.lblPourcentage.Size = new System.Drawing.Size(100, 20);
-            this.lblPourcentage.TabIndex = 15;
             // 
             // Form2
             // 
@@ -205,14 +197,13 @@
             this.AutoSize = true;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.ClientSize = new System.Drawing.Size(384, 461);
-            this.Controls.Add(this.lblPourcentage);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.PathPak);
             this.Controls.Add(this.BtnSelectPak);
             this.Controls.Add(this.checkedListBox1);
-            this.Controls.Add(this.button3);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.BtnPublishMod);
+            this.Controls.Add(this.BtnCloseWindowPublish);
+            this.Controls.Add(this.BtnSelectIcon);
             this.Controls.Add(this.textBox5);
             this.Controls.Add(this.textBox6);
             this.Controls.Add(this.textBox3);
@@ -235,13 +226,12 @@
         private System.Windows.Forms.TextBox textBox4;
         private System.Windows.Forms.TextBox textBox5;
         private System.Windows.Forms.TextBox textBox6;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button BtnSelectIcon;
+        private System.Windows.Forms.Button BtnCloseWindowPublish;
+        private System.Windows.Forms.Button BtnPublishMod;
         private System.Windows.Forms.CheckedListBox checkedListBox1;
         private System.Windows.Forms.Button BtnSelectPak;
         private System.Windows.Forms.TextBox PathPak;
         private System.Windows.Forms.ProgressBar progressBar1;
-        private System.Windows.Forms.TextBox lblPourcentage;
     }
 }

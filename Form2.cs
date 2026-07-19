@@ -1,42 +1,32 @@
-﻿using System;
+﻿using Steamworks;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using Steamworks;
 
 namespace UpGun_Mods_Tool_Launcher
 {
     public partial class Form2 : Form
     {
-        private uint m_AppIdCible;
-
+        private readonly uint m_AppIdCible;
         private string SelectFileIcon = "";
         private string dossierTemporaireUpload = "";
         private PublishedFileId_t m_FileId;
-        private CallResult<SubmitItemUpdateResult_t> m_SubmitItemUpdate;
-        private CallResult<CreateItemResult_t> m_CreateItem;
-
+        private readonly CallResult<SubmitItemUpdateResult_t> m_SubmitItemUpdate;
+        private readonly CallResult<CreateItemResult_t> m_CreateItem;
         private UGCUpdateHandle_t m_CurrentUpdateHandle;
-        private Timer progressTimer;
-        private bool estUneCreation = false;
+        private readonly bool estUneCreation = false;
 
         public Form2()
         {
             InitializeComponent();
-
             this.FormClosing -= Form2_FormClosing;
             this.FormClosing += Form2_FormClosing;
-
             this.BtnSelectPak.Click -= this.BtnSelectPak_Click; this.BtnSelectPak.Click += this.BtnSelectPak_Click;
-            this.button1.Click -= this.button1_Click; this.button1.Click += this.button1_Click;
-            this.button2.Click -= this.button2_Click; this.button2.Click += this.button2_Click;
-            this.button3.Click -= this.button3_Click; this.button3.Click += this.button3_Click;
+            this.BtnSelectIcon.Click -= this.BtnSelectIcon_Click; this.BtnSelectIcon.Click += this.BtnSelectIcon_Click;
+            this.BtnCloseWindowPublish.Click -= this.BtnCloseWindowPublish_Click; this.BtnCloseWindowPublish.Click += this.BtnCloseWindowPublish_Click;
+            this.BtnPublishMod.Click -= this.BtnPublishMod_Click; this.BtnPublishMod.Click += this.BtnPublishMod_Click;
         }
 
         public Form2(uint appIdCible, string titreMod, string descriptionMod, string tagsMod, PublishedFileId_t fileId) : this()
@@ -52,12 +42,12 @@ namespace UpGun_Mods_Tool_Launcher
             if (m_FileId == PublishedFileId_t.Invalid)
             {
                 estUneCreation = true;
-                button3.Text = "Publish New Map";
+                BtnPublishMod.Text = "Publish New Map";
             }
             else
             {
                 estUneCreation = false;
-                button3.Text = "Update Map";
+                BtnPublishMod.Text = "Update Map";
             }
 
             if (!string.IsNullOrEmpty(tagsMod))
@@ -80,7 +70,6 @@ namespace UpGun_Mods_Tool_Launcher
 
             progressBar1.Value = 0;
             progressBar1.Maximum = 100;
-            if (lblPourcentage != null) lblPourcentage.Text = "0%";
         }
 
         private void BtnSelectPak_Click(object sender, EventArgs e)
@@ -98,7 +87,7 @@ namespace UpGun_Mods_Tool_Launcher
             }
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void BtnPublishMod_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(PathPak.Text) || !File.Exists(PathPak.Text) || Path.GetExtension(PathPak.Text).ToLower() != ".pak")
             {
@@ -113,8 +102,7 @@ namespace UpGun_Mods_Tool_Launcher
             }
 
             progressBar1.Value = 0;
-            if (lblPourcentage != null) lblPourcentage.Text = "0%";
-            button3.Enabled = false;
+            BtnPublishMod.Enabled = false;
 
             if (estUneCreation)
             {
@@ -132,7 +120,7 @@ namespace UpGun_Mods_Tool_Launcher
         {
             if (bIOFailure || callback.m_eResult != EResult.k_EResultOK)
             {
-                button3.Enabled = true;
+                BtnPublishMod.Enabled = true;
                 MessageBox.Show("Échec création Workshop. Code : " + callback.m_eResult, "Erreur Steam", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
@@ -178,41 +166,31 @@ namespace UpGun_Mods_Tool_Launcher
 
                 SteamAPICall_t apiCall = SteamUGC.SubmitItemUpdate(m_CurrentUpdateHandle, "Mise à jour");
                 m_SubmitItemUpdate.Set(apiCall);
-
-                progressTimer = new Timer();
-                progressTimer.Interval = 200;
-                progressTimer.Tick += ProgressTimer_Tick;
-                progressTimer.Start();
             }
             catch (Exception ex)
             {
                 NettoyerDossierTemporaire();
-                button3.Enabled = true;
+                BtnPublishMod.Enabled = true;
                 MessageBox.Show("Erreur préparation : " + ex.Message, "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void ProgressTimer_Tick(object sender, EventArgs e)
         {
-            ulong bytesProcessed = 0;
-            ulong bytesTotal = 0;
-            SteamUGC.GetItemUpdateProgress(m_CurrentUpdateHandle, out bytesProcessed, out bytesTotal);
+            SteamUGC.GetItemUpdateProgress(m_CurrentUpdateHandle, out ulong bytesProcessed, out ulong bytesTotal);
 
             if (bytesTotal > 0)
             {
                 int pourcentage = (int)((bytesProcessed * 100) / bytesTotal);
                 if (pourcentage > 100) pourcentage = 100;
                 if (pourcentage < 0) pourcentage = 0;
-
                 progressBar1.Value = pourcentage;
-                if (lblPourcentage != null) lblPourcentage.Text = pourcentage + "%";
             }
         }
 
         private void OnItemUpdateCompleted(SubmitItemUpdateResult_t callback, bool bIOFailure)
         {
-            progressTimer?.Stop();
-            button3.Enabled = true;
+            BtnPublishMod.Enabled = true;
             NettoyerDossierTemporaire();
 
             if (bIOFailure || callback.m_eResult != EResult.k_EResultOK)
@@ -222,8 +200,6 @@ namespace UpGun_Mods_Tool_Launcher
             else
             {
                 progressBar1.Value = 100;
-                if (lblPourcentage != null) lblPourcentage.Text = "100%";
-
                 DialogResult reponse = MessageBox.Show("Opération réussie ! Ouvrir la page ?", "Succès", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
                 if (reponse == DialogResult.Yes)
                 {
@@ -249,7 +225,7 @@ namespace UpGun_Mods_Tool_Launcher
 
         private void Form2_FormClosing(object sender, FormClosingEventArgs e) => NettoyerDossierTemporaire();
 
-        private void button1_Click(object sender, EventArgs e)
+        private void BtnSelectIcon_Click(object sender, EventArgs e)
         {
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
@@ -265,6 +241,6 @@ namespace UpGun_Mods_Tool_Launcher
             }
         }
 
-        private void button2_Click(object sender, EventArgs e) => this.Close();
+        private void BtnCloseWindowPublish_Click(object sender, EventArgs e) => this.Close();
     }
 }
