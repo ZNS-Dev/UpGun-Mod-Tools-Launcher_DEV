@@ -1,0 +1,126 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="UpGun_Mod_Tools_Launcher.Views.PublishWindow"
+        Width="460" Height="700"
+        MinWidth="420" MinHeight="640"
+        CanResize="True"
+        ExtendClientAreaToDecorationsHint="True"
+        ExtendClientAreaTitleBarHeightHint="44"
+        ExtendClientAreaChromeHints="NoChrome"
+        Background="{StaticResource BgBrush}"
+        WindowStartupLocation="CenterOwner">
+
+  <Grid RowDefinitions="44,*">
+
+    <!-- Titlebar -->
+    <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Name="DragArea" PointerPressed="DragArea_PointerPressed">
+      <TextBlock Grid.Column="0" Name="TxtWindowTitle" Text="Publish Mod" Margin="18,0"
+                 VerticalAlignment="Center" FontWeight="SemiBold" FontSize="13.5"/>
+      <Button Grid.Column="1" Classes="icon" Margin="0,0,12,0" Click="BtnCloseWindowPublish_Click">
+        <TextBlock Text="&#x2715;" FontSize="11" FontWeight="SemiBold"/>
+      </Button>
+    </Grid>
+
+    <!-- Contenu scrollable -->
+    <ScrollViewer Grid.Row="1" Padding="24,4,24,0">
+      <StackPanel Spacing="18" Margin="0,0,0,20">
+
+        <!-- Dropzone .pak -->
+        <StackPanel Spacing="6">
+          <TextBlock Text="Fichier .pak" Classes="label"/>
+          <Border Name="DropZonePak" Classes="card" Padding="18" BorderThickness="1.5"
+        Background="{StaticResource BgElevatedBrush}"
+        DragDrop.AllowDrop="True"
+        PointerPressed="DropZonePak_PointerPressed"
+        DragDrop.DragOver="DropZonePak_DragOver"
+        DragDrop.Drop="DropZonePak_Drop"
+        Cursor="Hand">
+            <StackPanel HorizontalAlignment="Center" Spacing="6">
+              <TextBlock Text="&#x2191;" FontSize="20" FontWeight="Bold"
+                         HorizontalAlignment="Center" Foreground="{StaticResource AccentBrush}"/>
+              <TextBlock Name="TxtPakFileName" Text="Glisse ton fichier .pak ici, ou clique pour parcourir"
+                         HorizontalAlignment="Center" TextAlignment="Center"
+                         Foreground="{StaticResource TextSecondaryBrush}" FontSize="12.5" TextWrapping="Wrap"/>
+            </StackPanel>
+          </Border>
+        </StackPanel>
+
+        <!-- Titre -->
+        <StackPanel Spacing="6">
+          <TextBlock Text="Titre" Classes="label"/>
+          <TextBox Name="TxtTitle" Watermark="Nom de ton mod" MaxLength="255"/>
+        </StackPanel>
+
+        <!-- Description -->
+        <StackPanel Spacing="6">
+          <TextBlock Text="Description" Classes="label"/>
+          <TextBox Name="TxtDescription" Watermark="Décris ton mod…" MaxLength="30000"
+                    AcceptsReturn="True" TextWrapping="Wrap" Height="110" VerticalContentAlignment="Top"/>
+        </StackPanel>
+
+        <!-- Icône -->
+        <StackPanel Spacing="6">
+          <TextBlock Text="Icône (.png)" Classes="label"/>
+          <Grid ColumnDefinitions="56,*" >
+            <Border Grid.Column="0" Width="56" Height="56" CornerRadius="12"
+                    Background="{StaticResource BgElevatedBrush}" BorderBrush="{StaticResource BorderBrush1}" BorderThickness="1"
+                    ClipToBounds="True">
+              <Image Name="IconPreview" Stretch="UniformToFill"/>
+            </Border>
+            <Border Grid.Column="1" Classes="card" Padding="12,10" Margin="12,0,0,0"
+                    Background="{StaticResource BgElevatedBrush}" Cursor="Hand"
+                    PointerPressed="ChoisirIcone_Click">
+              <Grid ColumnDefinitions="*,Auto">
+                <TextBlock Grid.Column="0" Name="TxtIconPath" Text="Aucune icône sélectionnée"
+                           Foreground="{StaticResource TextSecondaryBrush}" FontSize="12.5"
+                           TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
+                <TextBlock Grid.Column="1" Text="Parcourir" Foreground="{StaticResource AccentBrush}"
+                           FontSize="12.5" FontWeight="Medium" VerticalAlignment="Center"/>
+              </Grid>
+            </Border>
+          </Grid>
+        </StackPanel>
+
+        <!-- Tags -->
+        <StackPanel Spacing="8">
+          <TextBlock Text="Tags" Classes="label"/>
+          <WrapPanel Name="TagsPanel">
+            <ToggleButton Classes="chip" Content="AK-Thodik"/>
+            <ToggleButton Classes="chip" Content="Animation"/>
+            <ToggleButton Classes="chip" Content="Armor"/>
+            <ToggleButton Classes="chip" Content="Audio"/>
+            <ToggleButton Classes="chip" Content="Character"/>
+            <ToggleButton Classes="chip" Content="Face"/>
+            <ToggleButton Classes="chip" Content="Gamemode"/>
+            <ToggleButton Classes="chip" Content="Knife"/>
+            <ToggleButton Classes="chip" Content="Map"/>
+            <ToggleButton Classes="chip" Content="Model"/>
+            <ToggleButton Classes="chip" Content="Settings"/>
+            <ToggleButton Classes="chip" Content="UI"/>
+            <ToggleButton Classes="chip" Content="Upgrade"/>
+            <ToggleButton Classes="chip" Content="Weapon"/>
+            <ToggleButton Classes="chip" Content="WIP"/>
+          </WrapPanel>
+        </StackPanel>
+
+        <!-- Progression -->
+        <StackPanel Name="ProgressSection" Spacing="6" IsVisible="False">
+          <Grid ColumnDefinitions="*,Auto">
+            <TextBlock Grid.Column="0" Name="TxtProgressLabel" Text="Préparation…" Classes="muted"/>
+            <TextBlock Grid.Column="1" Name="TxtProgressPercent" Text="0%" Classes="muted"/>
+          </Grid>
+          <ProgressBar Name="ProgressBarUpload" Minimum="0" Maximum="100" Value="0" IsIndeterminate="False"/>
+        </StackPanel>
+
+        <!-- Actions -->
+        <Grid ColumnDefinitions="*,*" Margin="0,4,0,0">
+          <Button Grid.Column="0" Name="BtnCloseWindowPublish" Classes="secondary" Content="Annuler"
+                  Margin="0,0,6,0" HorizontalAlignment="Stretch" Click="BtnCloseWindowPublish_Click"/>
+          <Button Grid.Column="1" Name="BtnPublishMod" Classes="primary" Content="Publish Mod"
+                  Margin="6,0,0,0" HorizontalAlignment="Stretch" Click="BtnPublishMod_Click"/>
+        </Grid>
+
+      </StackPanel>
+    </ScrollViewer>
+  </Grid>
+</Window>

@@ -1,0 +1,54 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+
+    <!-- Assemblage / branding -->
+    <AssemblyName>UpGunModToolsLauncher</AssemblyName>
+    <RootNamespace>UpGun_Mod_Tools_Launcher</RootNamespace>
+    <Product>UpGun Mod Tools Launcher</Product>
+    <Version>1.0.0</Version>
+    <Company>ZNS - Paulem</Company>
+    <Copyright>Copyright © 2026 ZNS - Paulem</Copyright>
+    <NeutralLanguage>fr</NeutralLanguage>
+
+    <!-- Icone d'appli : dépose ton .ico dans Assets/ModLauncher.ico -->
+    <ApplicationIcon Condition="Exists('Assets/ModLauncher.ico')">Assets/ModLauncher.ico</ApplicationIcon>
+
+    <!-- Multi-plateforme : publie avec -r win-x64 / linux-x64 / osx-x64 -->
+    <RuntimeIdentifiers>win-x64;linux-x64;osx-x64;osx-arm64</RuntimeIdentifiers>
+    <PublishSelfContained>true</PublishSelfContained>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="11.2.3" />
+    <PackageReference Include="Avalonia.Desktop" Version="11.2.3" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.2.3" />
+    <PackageReference Include="Avalonia.Fonts.Inter" Version="11.2.3" />
+    <PackageReference Include="Avalonia.Diagnostics" Version="11.2.3" Condition="'$(Configuration)' == 'Debug'" />
+    <PackageReference Include="Steamworks.NET" Version="2024.8.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AvaloniaResource Include="Assets\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Copie les libs natives Steamworks à côté de l'exécutable selon la plateforme -->
+    <None Include="Libs\steam_api64.dll" Condition="Exists('Libs\steam_api64.dll')">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Libs\libsteam_api.so" Condition="Exists('Libs\libsteam_api.so')">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Libs\libsteam_api.dylib" Condition="Exists('Libs\libsteam_api.dylib')">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

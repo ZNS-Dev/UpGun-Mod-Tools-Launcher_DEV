@@ -1,0 +1,22 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="UpGun_Mod_Tools_Launcher.Views.MessageDialog"
+        Width="380" SizeToContent="Height"
+        CanResize="False"
+        ExtendClientAreaToDecorationsHint="True"
+        ExtendClientAreaChromeHints="NoChrome"
+        ExtendClientAreaTitleBarHeightHint="36"
+        Background="{StaticResource BgElevatedBrush}"
+        WindowStartupLocation="CenterOwner">
+
+  <Grid RowDefinitions="36,*" Name="DragArea" PointerPressed="DragArea_PointerPressed">
+    <TextBlock Grid.Row="0" Name="TxtTitle" Margin="16,0" VerticalAlignment="Center"
+               FontWeight="SemiBold" FontSize="12.5" Foreground="{StaticResource TextSecondaryBrush}"/>
+
+    <StackPanel Grid.Row="1" Margin="20,4,20,20" Spacing="18">
+      <TextBlock Name="TxtMessage" TextWrapping="Wrap" FontSize="13.5" LineHeight="19"/>
+      <Button Name="BtnOk" Classes="primary" Content="OK" HorizontalAlignment="Right"
+              Padding="24,9" Click="BtnOk_Click"/>
+    </StackPanel>
+  </Grid>
+</Window>
