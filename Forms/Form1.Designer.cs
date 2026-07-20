@@ -36,9 +36,6 @@
             this.BtnDiscordModding = new System.Windows.Forms.ToolStripMenuItem();
             this.BtnDiscordUG = new System.Windows.Forms.ToolStripMenuItem();
             this.BtnDiscordUGModding = new System.Windows.Forms.ToolStripMenuItem();
-            this.startUpGunToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -80,8 +77,7 @@
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.BtnDiscordModding,
-            this.startUpGunToolStripMenuItem});
+            this.BtnDiscordModding});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(558, 24);
@@ -111,48 +107,6 @@
             this.BtnDiscordUGModding.Text = "UpGun Modding";
             this.BtnDiscordUGModding.Click += new System.EventHandler(this.BtnDiscordUGModding_Click);
             // 
-            // startUpGunToolStripMenuItem
-            // 
-            this.startUpGunToolStripMenuItem.Name = "startUpGunToolStripMenuItem";
-            this.startUpGunToolStripMenuItem.Size = new System.Drawing.Size(83, 20);
-            this.startUpGunToolStripMenuItem.Text = "Start UpGun";
-            this.startUpGunToolStripMenuItem.Click += new System.EventHandler(this.startUpGunToolStripMenuItem_Click);
-            // 
-            // textBox1
-            // 
-            this.textBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox1.ForeColor = System.Drawing.SystemColors.Window;
-            this.textBox1.Location = new System.Drawing.Point(12, 458);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.ReadOnly = true;
-            this.textBox1.ShortcutsEnabled = false;
-            this.textBox1.Size = new System.Drawing.Size(534, 31);
-            this.textBox1.TabIndex = 0;
-            this.textBox1.TabStop = false;
-            this.textBox1.Text = "WARNING! You can’t launch UpGun on Steam with the tool open. Press Start UpGun or" +
-    " close the tool to launch it via Steam.";
-            this.textBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // textBox2
-            // 
-            this.textBox2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.textBox2.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox2.ForeColor = System.Drawing.SystemColors.Window;
-            this.textBox2.Location = new System.Drawing.Point(12, 27);
-            this.textBox2.Multiline = true;
-            this.textBox2.Name = "textBox2";
-            this.textBox2.ReadOnly = true;
-            this.textBox2.ShortcutsEnabled = false;
-            this.textBox2.Size = new System.Drawing.Size(174, 19);
-            this.textBox2.TabIndex = 7;
-            this.textBox2.TabStop = false;
-            this.textBox2.Text = "UpGun Mod Tools Launcher";
-            this.textBox2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -161,8 +115,6 @@
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.ClientSize = new System.Drawing.Size(558, 501);
-            this.Controls.Add(this.textBox2);
-            this.Controls.Add(this.textBox1);
             this.Controls.Add(this.ListBoxWorkshopItem);
             this.Controls.Add(this.BtnRefreshList);
             this.Controls.Add(this.BtnUpload);
@@ -188,8 +140,5 @@
         private System.Windows.Forms.ToolStripMenuItem BtnDiscordModding;
         private System.Windows.Forms.ToolStripMenuItem BtnDiscordUG;
         private System.Windows.Forms.ToolStripMenuItem BtnDiscordUGModding;
-        private System.Windows.Forms.ToolStripMenuItem startUpGunToolStripMenuItem;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.TextBox textBox2;
     }
 }

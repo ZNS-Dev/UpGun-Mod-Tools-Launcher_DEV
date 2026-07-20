@@ -133,7 +133,6 @@
             this.BtnCloseWindowPublish.TabIndex = 9;
             this.BtnCloseWindowPublish.Text = "Cancel";
             this.BtnCloseWindowPublish.UseVisualStyleBackColor = true;
-            this.BtnCloseWindowPublish.Click += new System.EventHandler(this.BtnCloseWindowPublish_Click);
             // 
             // BtnPublishMod
             // 
