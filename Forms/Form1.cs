@@ -67,12 +67,15 @@ namespace UpGun_Mod_Tools_Launcher
                         {
                             if (ulong.TryParse(parts[0], out ulong rawFileId))
                             {
+                                long.TryParse(parts.Length >= 5 ? parts[4] : "0", out long rawSize);
+
                                 WorkshopItem item = new WorkshopItem
                                 {
                                     FileId = new Steamworks.PublishedFileId_t(rawFileId),
                                     Title = parts[1],
                                     Description = parts[2].Replace("<BR>", "\n"),
-                                    Tags = parts[3]
+                                    Tags = parts[3],
+                                    FileSize = rawSize
                                 };
                                 ListBoxWorkshopItem.Items.Add(item);
                             }
@@ -83,12 +86,12 @@ namespace UpGun_Mod_Tools_Launcher
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Erreur lors de la récupération : " + ex.Message, "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error retrieving items: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             if (!string.IsNullOrEmpty(messageErreurSteam))
             {
-                MessageBox.Show(messageErreurSteam, "Steam Non Détecté", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(messageErreurSteam, "Steam Not Detected", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Application.Exit();
                 return;
             }
@@ -119,9 +122,22 @@ namespace UpGun_Mod_Tools_Launcher
             public string Title { get; set; }
             public string Description { get; set; }
             public string Tags { get; set; }
+            public long FileSize { get; set; }
             public Steamworks.PublishedFileId_t FileId { get; set; }
 
-            public override string ToString() => string.IsNullOrEmpty(Title) ? "NO TITLE!" : Title;
+            public string FormattedSize
+            {
+                get
+                {
+                    double bytes = FileSize;
+                    if (bytes >= 1000000000) return $"{bytes / 1000000000.0:0.00} GB";
+                    if (bytes >= 1000000) return $"{bytes / 1000000.0:0.00} MB";
+                    if (bytes >= 1000) return $"{bytes / 1000.0:0.00} KB";
+                    return $"{bytes} B";
+                }
+            }
+
+            public override string ToString() => string.IsNullOrEmpty(Title) ? "NO TITLE!" : $"{Title} ({FormattedSize})";
         }
     }
 }

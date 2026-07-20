@@ -68,14 +68,14 @@ namespace UpGun_Mod_Tools_Launcher
 
             if (string.IsNullOrEmpty(PathPak.Text) || !File.Exists(PathPak.Text) || Path.GetExtension(PathPak.Text).ToLower() != ".pak")
             {
-                MessageBox.Show("Fichier .pak invalide !", "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Invalid .pak file!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 BtnPublishMod.Enabled = true;
                 return;
             }
 
             if (string.IsNullOrEmpty(textBox2.Text.Trim()))
             {
-                MessageBox.Show("Veuillez indiquer un titre.", "Titre manquant", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Please enter a title.", "Missing Title", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 BtnPublishMod.Enabled = true;
                 return;
             }
@@ -88,7 +88,6 @@ namespace UpGun_Mod_Tools_Launcher
 
             GererEtatInterface(false);
 
-            // Encodage Base64 des arguments
             string titreB64 = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(textBox2.Text.Trim()));
             string descB64 = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(textBox3.Text.Trim()));
             string pakB64 = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(PathPak.Text));
@@ -118,14 +117,34 @@ namespace UpGun_Mod_Tools_Launcher
 
                         if (argsData.Data.StartsWith("PROGRESS:"))
                         {
-                            BtnPublishMod.Text = argsData.Data.Replace("PROGRESS:", "");
+                            string progressMsg = argsData.Data.Replace("PROGRESS:", "");
+                            BtnPublishMod.Text = progressMsg;
+
+                            int openParen = progressMsg.LastIndexOf('(');
+                            int closeParen = progressMsg.LastIndexOf('%');
+
+                            if (openParen != -1 && closeParen != -1 && closeParen > openParen)
+                            {
+                                string percentStr = progressMsg.Substring(openParen + 1, closeParen - openParen - 1);
+                                if (int.TryParse(percentStr, out int percentValue))
+                                {
+                                    progressBar1.Style = ProgressBarStyle.Blocks;
+                                    progressBar1.Value = Math.Min(100, Math.Max(0, percentValue));
+                                    TxtBoxPourcent.Text = $"{percentValue}%";
+                                }
+                            }
+                            else
+                            {
+                                progressBar1.Style = ProgressBarStyle.Marquee;
+                                TxtBoxPourcent.Text = "...";
+                            }
                         }
                         else if (argsData.Data.StartsWith("SUCCESS:"))
                         {
                             GererEtatInterface(true);
                             string fileIdGenere = argsData.Data.Replace("SUCCESS:", "");
 
-                            if (MessageBox.Show("Publication réussie ! Ouvrir la page ?", "Succès", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
+                            if (MessageBox.Show("Publish successful! Open the Workshop page?", "Success", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
                             {
                                 Process.Start("steam://url/CommunityFilePage/" + fileIdGenere);
                             }
@@ -136,7 +155,7 @@ namespace UpGun_Mod_Tools_Launcher
                         else if (argsData.Data.StartsWith("ERROR:"))
                         {
                             GererEtatInterface(true);
-                            MessageBox.Show(argsData.Data.Replace("ERROR:", ""), "Erreur Steam", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show(argsData.Data.Replace("ERROR:", ""), "Steam Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     });
                 }
@@ -157,7 +176,13 @@ namespace UpGun_Mod_Tools_Launcher
             BtnPublishMod.Enabled = actif;
             BtnCloseWindowPublish.Enabled = actif;
 
-            if (actif) BtnPublishMod.Text = estUneCreation ? "Publish Mod" : "Update Mod";
+            if (actif)
+            {
+                BtnPublishMod.Text = estUneCreation ? "Publish Mod" : "Update Mod";
+                progressBar1.Value = 0;
+                progressBar1.Style = ProgressBarStyle.Blocks;
+                TxtBoxPourcent.Text = "0%";
+            }
         }
 
         private void ChoisirFichierPak_Click(object sender, EventArgs e)
@@ -181,7 +206,6 @@ namespace UpGun_Mod_Tools_Launcher
         }
     }
 
-    // Extraction de la classe en dehors de Form2
     public static class SteamWorkerTask
     {
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
@@ -204,7 +228,7 @@ namespace UpGun_Mod_Tools_Launcher
 
             if (!SteamAPI.Init())
             {
-                Console.WriteLine("ERROR:Steam n'est pas ouvert ! Veuillez démarrer Steam puis relancer l'application.");
+                Console.WriteLine("ERROR:Steam is not running! Please start Steam and restart the application.");
                 return;
             }
 
@@ -217,7 +241,7 @@ namespace UpGun_Mod_Tools_Launcher
                         if (SteamUGC.GetQueryUGCResult(callback.m_handle, i, out SteamUGCDetails_t details))
                         {
                             string desc = details.m_rgchDescription.Replace("\r\n", "<BR>").Replace("\n", "<BR>");
-                            Console.WriteLine($"{details.m_nPublishedFileId}|{details.m_rgchTitle}|{desc}|{details.m_rgchTags}");
+                            Console.WriteLine($"{details.m_nPublishedFileId}|{details.m_rgchTitle}|{desc}|{details.m_rgchTags}|{details.m_nFileSize}");
                         }
                     }
                     SteamUGC.ReleaseQueryUGCRequest(callback.m_handle);
@@ -251,91 +275,98 @@ namespace UpGun_Mod_Tools_Launcher
         {
             if (args.Length < 8) return;
 
-            uint appId = uint.Parse(args[1]);
-            fileIdTraite = new PublishedFileId_t(ulong.Parse(args[2]));
-            string titre = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(args[3]));
-            string desc = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(args[4]));
-            string pakPath = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(args[5]));
-            string iconPath = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(args[6]));
-            string tags = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(args[7]));
-
-            SetEnvironmentVariable("SteamAppId", appId.ToString());
-
-            if (!SteamAPI.Init())
+            try
             {
-                Console.WriteLine("ERROR:Steam n'est pas ouvert ! Veuillez démarrer Steam puis relancer l'application.");
-                return;
-            }
+                uint appId = uint.Parse(args[1]);
+                fileIdTraite = new PublishedFileId_t(ulong.Parse(args[2]));
+                string titre = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(args[3]));
+                string desc = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(args[4]));
+                string pakPath = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(args[5]));
+                string iconPath = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(args[6]));
+                string tags = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(args[7]));
 
-            m_CreateItem = CallResult<CreateItemResult_t>.Create((callback, bIOFailure) =>
-            {
-                if (bIOFailure || callback.m_eResult != EResult.k_EResultOK)
+                SetEnvironmentVariable("SteamAppId", appId.ToString());
+
+                if (!SteamAPI.Init())
                 {
-                    Console.WriteLine("ERROR:Échec de création sur Steam. Code: " + callback.m_eResult);
-                    enExecution = false;
+                    Console.WriteLine("ERROR:Steam is not running! Please start Steam and restart the application.");
                     return;
                 }
 
-                fileIdTraite = callback.m_nPublishedFileId;
-                DemarrerUpdate(appId, fileIdTraite, titre, desc, pakPath, iconPath, tags);
-            });
-
-            m_SubmitItemUpdate = CallResult<SubmitItemUpdateResult_t>.Create((callback, bIOFailure) =>
-            {
-                if (bIOFailure || callback.m_eResult != EResult.k_EResultOK)
+                m_CreateItem = CallResult<CreateItemResult_t>.Create((callback, bIOFailure) =>
                 {
-                    Console.WriteLine("ERROR:Échec de l'envoi Steam. Code: " + callback.m_eResult);
-                }
-                else
-                {
-                    Console.WriteLine("SUCCESS:" + fileIdTraite.m_PublishedFileId);
-                }
-                enExecution = false;
-            });
-
-            if (fileIdTraite == PublishedFileId_t.Invalid)
-            {
-                Console.WriteLine("PROGRESS:Création du Mod sur Steam...");
-                SteamAPICall_t apiCall = SteamUGC.CreateItem(new AppId_t(appId), EWorkshopFileType.k_EWorkshopFileTypeCommunity);
-                m_CreateItem.Set(apiCall);
-            }
-            else
-            {
-                DemarrerUpdate(appId, fileIdTraite, titre, desc, pakPath, iconPath, tags);
-            }
-
-            while (enExecution)
-            {
-                SteamAPI.RunCallbacks();
-
-                if (m_CurrentUpdateHandle != UGCUpdateHandle_t.Invalid)
-                {
-                    EItemUpdateStatus status = SteamUGC.GetItemUpdateProgress(m_CurrentUpdateHandle, out ulong bytesProcessed, out ulong bytesTotal);
-                    string textStatus = "Préparation...";
-
-                    switch (status)
+                    if (bIOFailure || callback.m_eResult != EResult.k_EResultOK)
                     {
-                        case EItemUpdateStatus.k_EItemUpdateStatusPreparingConfig: textStatus = "Configuration..."; break;
-                        case EItemUpdateStatus.k_EItemUpdateStatusUploadingContent: textStatus = "Envoi du contenu..."; break;
-                        case EItemUpdateStatus.k_EItemUpdateStatusUploadingPreviewFile: textStatus = "Envoi de l'icône..."; break;
-                        case EItemUpdateStatus.k_EItemUpdateStatusCommittingChanges: textStatus = "Validation..."; break;
+                        Console.WriteLine("ERROR:Failed to create item on Steam. Code: " + callback.m_eResult);
+                        enExecution = false;
+                        return;
                     }
 
-                    if (bytesTotal > 0)
+                    fileIdTraite = callback.m_nPublishedFileId;
+                    DemarrerUpdate(appId, fileIdTraite, titre, desc, pakPath, iconPath, tags);
+                });
+
+                m_SubmitItemUpdate = CallResult<SubmitItemUpdateResult_t>.Create((callback, bIOFailure) =>
+                {
+                    if (bIOFailure || callback.m_eResult != EResult.k_EResultOK)
                     {
-                        int progress = (int)((bytesProcessed * 100) / bytesTotal);
-                        Console.WriteLine($"PROGRESS:{textStatus} ({progress}%)");
+                        Console.WriteLine("ERROR:Failed to upload to Steam. Code: " + callback.m_eResult);
                     }
                     else
                     {
-                        Console.WriteLine($"PROGRESS:{textStatus}");
+                        Console.WriteLine("SUCCESS:" + fileIdTraite.m_PublishedFileId);
                     }
+                    enExecution = false;
+                });
+
+                if (fileIdTraite == PublishedFileId_t.Invalid)
+                {
+                    Console.WriteLine("PROGRESS:Creating Mod on Steam...");
+                    SteamAPICall_t apiCall = SteamUGC.CreateItem(new AppId_t(appId), EWorkshopFileType.k_EWorkshopFileTypeCommunity);
+                    m_CreateItem.Set(apiCall);
+                }
+                else
+                {
+                    DemarrerUpdate(appId, fileIdTraite, titre, desc, pakPath, iconPath, tags);
                 }
 
-                Thread.Sleep(100);
-            }
+                while (enExecution)
+                {
+                    SteamAPI.RunCallbacks();
 
-            SteamAPI.Shutdown();
+                    if (m_CurrentUpdateHandle != UGCUpdateHandle_t.Invalid)
+                    {
+                        EItemUpdateStatus status = SteamUGC.GetItemUpdateProgress(m_CurrentUpdateHandle, out ulong bytesProcessed, out ulong bytesTotal);
+                        string textStatus = "Preparing...";
+
+                        switch (status)
+                        {
+                            case EItemUpdateStatus.k_EItemUpdateStatusPreparingConfig: textStatus = "Configuring..."; break;
+                            case EItemUpdateStatus.k_EItemUpdateStatusUploadingContent: textStatus = "Uploading content..."; break;
+                            case EItemUpdateStatus.k_EItemUpdateStatusUploadingPreviewFile: textStatus = "Uploading preview icon..."; break;
+                            case EItemUpdateStatus.k_EItemUpdateStatusCommittingChanges: textStatus = "Committing changes..."; break;
+                        }
+
+                        if (bytesTotal > 0)
+                        {
+                            int progress = (int)((bytesProcessed * 100) / bytesTotal);
+                            Console.WriteLine($"PROGRESS:{textStatus} ({progress}%)");
+                        }
+                        else
+                        {
+                            Console.WriteLine($"PROGRESS:{textStatus}");
+                        }
+                    }
+
+                    Thread.Sleep(100);
+                }
+
+                SteamAPI.Shutdown();
+            }
+            finally
+            {
+                NettoyerDossierTemporaire();
+            }
         }
 
         private static void DemarrerUpdate(uint appId, PublishedFileId_t fileId, string titre, string desc, string pakPath, string iconPath, string tags)
@@ -371,6 +402,15 @@ namespace UpGun_Mod_Tools_Launcher
 
             SteamAPICall_t apiCall = SteamUGC.SubmitItemUpdate(m_CurrentUpdateHandle, "");
             m_SubmitItemUpdate.Set(apiCall);
+        }
+
+        private static void NettoyerDossierTemporaire()
+        {
+            string dossierEnvoi = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DONT_DELETE");
+            if (Directory.Exists(dossierEnvoi))
+            {
+                try { Directory.Delete(dossierEnvoi, true); } catch { }
+            }
         }
     }
 }

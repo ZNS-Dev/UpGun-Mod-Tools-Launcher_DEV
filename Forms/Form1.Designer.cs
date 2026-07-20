@@ -36,6 +36,9 @@
             this.BtnDiscordModding = new System.Windows.Forms.ToolStripMenuItem();
             this.BtnDiscordUG = new System.Windows.Forms.ToolStripMenuItem();
             this.BtnDiscordUGModding = new System.Windows.Forms.ToolStripMenuItem();
+            this.TxtBoxVersion = new System.Windows.Forms.TextBox();
+            this.TxtBoxMessage = new System.Windows.Forms.TextBox();
+            this.TxtBoxLastVersion = new System.Windows.Forms.TextBox();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -57,7 +60,6 @@
             this.BtnRefreshList.TabIndex = 5;
             this.BtnRefreshList.Text = "Refresh List";
             this.BtnRefreshList.UseVisualStyleBackColor = true;
-            this.BtnRefreshList.Click += new System.EventHandler(this.BtnRefreshList_Click);
             // 
             // ListBoxWorkshopItem
             // 
@@ -66,9 +68,40 @@
             this.ListBoxWorkshopItem.ForeColor = System.Drawing.SystemColors.Window;
             this.ListBoxWorkshopItem.FormattingEnabled = true;
             this.ListBoxWorkshopItem.ItemHeight = 21;
-            this.ListBoxWorkshopItem.Location = new System.Drawing.Point(12, 48);
+            this.ListBoxWorkshopItem.Items.AddRange(new object[] {
+            "test",
+            "test",
+            "test",
+            "test",
+            "test",
+            "test",
+            "test",
+            "test",
+            "test",
+            "test",
+            "test",
+            "test",
+            "test",
+            "test",
+            "test",
+            "test",
+            "test",
+            "test",
+            "test",
+            "test",
+            "test",
+            "test",
+            "test",
+            "test",
+            "test",
+            "test",
+            "test",
+            "test",
+            "test",
+            "test"});
+            this.ListBoxWorkshopItem.Location = new System.Drawing.Point(12, 111);
             this.ListBoxWorkshopItem.Name = "ListBoxWorkshopItem";
-            this.ListBoxWorkshopItem.Size = new System.Drawing.Size(403, 235);
+            this.ListBoxWorkshopItem.Size = new System.Drawing.Size(403, 172);
             this.ListBoxWorkshopItem.Sorted = true;
             this.ListBoxWorkshopItem.TabIndex = 0;
             this.ListBoxWorkshopItem.TabStop = false;
@@ -96,16 +129,67 @@
             // BtnDiscordUG
             // 
             this.BtnDiscordUG.Name = "BtnDiscordUG";
-            this.BtnDiscordUG.Size = new System.Drawing.Size(163, 22);
+            this.BtnDiscordUG.Size = new System.Drawing.Size(180, 22);
             this.BtnDiscordUG.Text = "UpGun";
             this.BtnDiscordUG.Click += new System.EventHandler(this.BtnDiscordUG_Click);
             // 
             // BtnDiscordUGModding
             // 
             this.BtnDiscordUGModding.Name = "BtnDiscordUGModding";
-            this.BtnDiscordUGModding.Size = new System.Drawing.Size(163, 22);
+            this.BtnDiscordUGModding.Size = new System.Drawing.Size(180, 22);
             this.BtnDiscordUGModding.Text = "UpGun Modding";
             this.BtnDiscordUGModding.Click += new System.EventHandler(this.BtnDiscordUGModding_Click);
+            // 
+            // TxtBoxVersion
+            // 
+            this.TxtBoxVersion.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.TxtBoxVersion.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.TxtBoxVersion.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.TxtBoxVersion.ForeColor = System.Drawing.SystemColors.Window;
+            this.TxtBoxVersion.Location = new System.Drawing.Point(506, 476);
+            this.TxtBoxVersion.MaxLength = 7;
+            this.TxtBoxVersion.Name = "TxtBoxVersion";
+            this.TxtBoxVersion.ReadOnly = true;
+            this.TxtBoxVersion.ShortcutsEnabled = false;
+            this.TxtBoxVersion.Size = new System.Drawing.Size(40, 13);
+            this.TxtBoxVersion.TabIndex = 0;
+            this.TxtBoxVersion.TabStop = false;
+            this.TxtBoxVersion.Text = "v1.0.0";
+            this.TxtBoxVersion.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // TxtBoxMessage
+            // 
+            this.TxtBoxMessage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.TxtBoxMessage.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.TxtBoxMessage.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.TxtBoxMessage.ForeColor = System.Drawing.SystemColors.Window;
+            this.TxtBoxMessage.Location = new System.Drawing.Point(0, 439);
+            this.TxtBoxMessage.Multiline = true;
+            this.TxtBoxMessage.Name = "TxtBoxMessage";
+            this.TxtBoxMessage.ReadOnly = true;
+            this.TxtBoxMessage.ShortcutsEnabled = false;
+            this.TxtBoxMessage.Size = new System.Drawing.Size(558, 31);
+            this.TxtBoxMessage.TabIndex = 7;
+            this.TxtBoxMessage.TabStop = false;
+            this.TxtBoxMessage.Text = resources.GetString("TxtBoxMessage.Text");
+            this.TxtBoxMessage.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // TxtBoxLastVersion
+            // 
+            this.TxtBoxLastVersion.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.TxtBoxLastVersion.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.TxtBoxLastVersion.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.TxtBoxLastVersion.ForeColor = System.Drawing.SystemColors.Window;
+            this.TxtBoxLastVersion.Location = new System.Drawing.Point(326, 476);
+            this.TxtBoxLastVersion.MaxLength = 7;
+            this.TxtBoxLastVersion.Name = "TxtBoxLastVersion";
+            this.TxtBoxLastVersion.ReadOnly = true;
+            this.TxtBoxLastVersion.ShortcutsEnabled = false;
+            this.TxtBoxLastVersion.Size = new System.Drawing.Size(174, 20);
+            this.TxtBoxLastVersion.TabIndex = 8;
+            this.TxtBoxLastVersion.TabStop = false;
+            this.TxtBoxLastVersion.Text = "Last version/ Version outaded!";
+            this.TxtBoxLastVersion.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // Form1
             // 
@@ -115,6 +199,9 @@
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.ClientSize = new System.Drawing.Size(558, 501);
+            this.Controls.Add(this.TxtBoxLastVersion);
+            this.Controls.Add(this.TxtBoxMessage);
+            this.Controls.Add(this.TxtBoxVersion);
             this.Controls.Add(this.ListBoxWorkshopItem);
             this.Controls.Add(this.BtnRefreshList);
             this.Controls.Add(this.BtnUpload);
@@ -140,5 +227,8 @@
         private System.Windows.Forms.ToolStripMenuItem BtnDiscordModding;
         private System.Windows.Forms.ToolStripMenuItem BtnDiscordUG;
         private System.Windows.Forms.ToolStripMenuItem BtnDiscordUGModding;
+        private System.Windows.Forms.TextBox TxtBoxVersion;
+        private System.Windows.Forms.TextBox TxtBoxMessage;
+        private System.Windows.Forms.TextBox TxtBoxLastVersion;
     }
 }
