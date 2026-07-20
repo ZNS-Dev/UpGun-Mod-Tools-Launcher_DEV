@@ -26,9 +26,16 @@ namespace UpGun_Mod_Tools_Launcher
         }
 
         private void Form1_Load(object sender, EventArgs e) => ChargerWorkshopSteam();
+        private void BtnRefreshList_Click(object sender, EventArgs e) => ChargerWorkshopSteam();
+        private void BtnDiscordUG_Click(object sender, EventArgs e) => Process.Start("https://discord.com/invite/pMxHCVXJrz");
+        private void BtnDiscordUGModding_Click(object sender, EventArgs e) => Process.Start("https://discord.gg/9VKrCEbyAV");
+        private void ListBoxWorkshopItem_SelectedIndexChanged(object sender, EventArgs e) => MettreAJourTexteBouton();
+        private void MettreAJourTexteBouton() => BtnUpload.Text = (ListBoxWorkshopItem.SelectedItem != null) ? "Update" : "Upload";
 
         private void ChargerWorkshopSteam()
         {
+            string messageErreurSteam = null;
+
             try
             {
                 ListBoxWorkshopItem.Items.Clear();
@@ -48,6 +55,12 @@ namespace UpGun_Mod_Tools_Launcher
                     while ((line = process.StandardOutput.ReadLine()) != null)
                     {
                         if (string.IsNullOrWhiteSpace(line)) continue;
+
+                        if (line.StartsWith("ERROR:"))
+                        {
+                            messageErreurSteam = line.Replace("ERROR:", "");
+                            break;
+                        }
 
                         string[] parts = line.Split('|');
                         if (parts.Length >= 4)
@@ -73,12 +86,15 @@ namespace UpGun_Mod_Tools_Launcher
                 MessageBox.Show("Erreur lors de la récupération : " + ex.Message, "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
+            if (!string.IsNullOrEmpty(messageErreurSteam))
+            {
+                MessageBox.Show(messageErreurSteam, "Steam Non Détecté", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Application.Exit();
+                return;
+            }
+
             MettreAJourTexteBouton();
         }
-
-        private void ListBoxWorkshopItem_SelectedIndexChanged(object sender, EventArgs e) => MettreAJourTexteBouton();
-
-        private void MettreAJourTexteBouton() => BtnUpload.Text = (ListBoxWorkshopItem.SelectedItem != null) ? "Update" : "Upload";
 
         private void BtnUpload_Click(object sender, EventArgs e)
         {
@@ -97,10 +113,6 @@ namespace UpGun_Mod_Tools_Launcher
                 ChargerWorkshopSteam();
             }
         }
-
-        private void BtnRefreshList_Click(object sender, EventArgs e) => ChargerWorkshopSteam();
-        private void BtnDiscordUG_Click(object sender, EventArgs e) => Process.Start("https://discord.com/invite/pMxHCVXJrz");
-        private void BtnDiscordUGModding_Click(object sender, EventArgs e) => Process.Start("https://discord.gg/9VKrCEbyAV");
 
         public class WorkshopItem
         {

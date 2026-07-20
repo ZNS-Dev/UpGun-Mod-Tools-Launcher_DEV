@@ -42,18 +42,18 @@
             // BtnUpload
             // 
             this.BtnUpload.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.BtnUpload.Location = new System.Drawing.Point(12, 289);
+            this.BtnUpload.Location = new System.Drawing.Point(421, 227);
             this.BtnUpload.Name = "BtnUpload";
-            this.BtnUpload.Size = new System.Drawing.Size(210, 25);
+            this.BtnUpload.Size = new System.Drawing.Size(125, 25);
             this.BtnUpload.TabIndex = 3;
             this.BtnUpload.Text = "Upload";
             this.BtnUpload.UseVisualStyleBackColor = true;
             // 
             // BtnRefreshList
             // 
-            this.BtnRefreshList.Location = new System.Drawing.Point(336, 289);
+            this.BtnRefreshList.Location = new System.Drawing.Point(421, 258);
             this.BtnRefreshList.Name = "BtnRefreshList";
-            this.BtnRefreshList.Size = new System.Drawing.Size(210, 25);
+            this.BtnRefreshList.Size = new System.Drawing.Size(125, 25);
             this.BtnRefreshList.TabIndex = 5;
             this.BtnRefreshList.Text = "Refresh List";
             this.BtnRefreshList.UseVisualStyleBackColor = true;
@@ -62,13 +62,13 @@
             // ListBoxWorkshopItem
             // 
             this.ListBoxWorkshopItem.BackColor = System.Drawing.Color.Gray;
-            this.ListBoxWorkshopItem.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ListBoxWorkshopItem.Font = new System.Drawing.Font("Franklin Gothic Medium", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ListBoxWorkshopItem.ForeColor = System.Drawing.SystemColors.Window;
             this.ListBoxWorkshopItem.FormattingEnabled = true;
             this.ListBoxWorkshopItem.ItemHeight = 21;
             this.ListBoxWorkshopItem.Location = new System.Drawing.Point(12, 48);
             this.ListBoxWorkshopItem.Name = "ListBoxWorkshopItem";
-            this.ListBoxWorkshopItem.Size = new System.Drawing.Size(534, 235);
+            this.ListBoxWorkshopItem.Size = new System.Drawing.Size(403, 235);
             this.ListBoxWorkshopItem.Sorted = true;
             this.ListBoxWorkshopItem.TabIndex = 0;
             this.ListBoxWorkshopItem.TabStop = false;
@@ -96,14 +96,14 @@
             // BtnDiscordUG
             // 
             this.BtnDiscordUG.Name = "BtnDiscordUG";
-            this.BtnDiscordUG.Size = new System.Drawing.Size(180, 22);
+            this.BtnDiscordUG.Size = new System.Drawing.Size(163, 22);
             this.BtnDiscordUG.Text = "UpGun";
             this.BtnDiscordUG.Click += new System.EventHandler(this.BtnDiscordUG_Click);
             // 
             // BtnDiscordUGModding
             // 
             this.BtnDiscordUGModding.Name = "BtnDiscordUGModding";
-            this.BtnDiscordUGModding.Size = new System.Drawing.Size(180, 22);
+            this.BtnDiscordUGModding.Size = new System.Drawing.Size(163, 22);
             this.BtnDiscordUGModding.Text = "UpGun Modding";
             this.BtnDiscordUGModding.Click += new System.EventHandler(this.BtnDiscordUGModding_Click);
             // 

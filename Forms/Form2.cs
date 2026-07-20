@@ -21,8 +21,6 @@ namespace UpGun_Mod_Tools_Launcher
         public Form2()
         {
             InitializeComponent();
-
-            // Protection anti-double événement (-= avant +=)
             this.BtnSelectPak.Click -= ChoisirFichierPak_Click;
             this.BtnSelectPak.Click += ChoisirFichierPak_Click;
 
@@ -35,6 +33,8 @@ namespace UpGun_Mod_Tools_Launcher
             this.BtnPublishMod.Click -= BtnPublishMod_Click;
             this.BtnPublishMod.Click += BtnPublishMod_Click;
         }
+
+        private void BtnCloseWindowPublish_Click(object sender, EventArgs e) => this.Close();
 
         public Form2(uint appIdCible, string titreMod, string descriptionMod, string tagsMod, PublishedFileId_t fileId) : this()
         {
@@ -62,8 +62,9 @@ namespace UpGun_Mod_Tools_Launcher
 
         private void BtnPublishMod_Click(object sender, EventArgs e)
         {
-            // Désactivation immédiate pour contrer les doubles clics
             BtnPublishMod.Enabled = false;
+            BtnCloseWindowPublish.Enabled = false;
+            BtnSelectIcon.Enabled = false;
 
             if (string.IsNullOrEmpty(PathPak.Text) || !File.Exists(PathPak.Text) || Path.GetExtension(PathPak.Text).ToLower() != ".pak")
             {
@@ -107,7 +108,6 @@ namespace UpGun_Mod_Tools_Launcher
 
             workerProcess.OutputDataReceived += (s, argsData) =>
             {
-                // Vérification anti ObjectDisposedException
                 if (string.IsNullOrEmpty(argsData.Data) || this.IsDisposed || !this.IsHandleCreated) return;
 
                 try
@@ -179,13 +179,9 @@ namespace UpGun_Mod_Tools_Launcher
                 }
             }
         }
-
-        private void BtnCloseWindowPublish_Click(object sender, EventArgs e) => this.Close();
     }
 
-    // =========================================================================
-    // WORKER STEAM (Processus isolé)
-    // =========================================================================
+    // Extraction de la classe en dehors de Form2
     public static class SteamWorkerTask
     {
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
@@ -206,7 +202,11 @@ namespace UpGun_Mod_Tools_Launcher
             uint appId = uint.Parse(args[1]);
             SetEnvironmentVariable("SteamAppId", appId.ToString());
 
-            if (!SteamAPI.Init()) return;
+            if (!SteamAPI.Init())
+            {
+                Console.WriteLine("ERROR:Steam n'est pas ouvert ! Veuillez démarrer Steam puis relancer l'application.");
+                return;
+            }
 
             m_SteamUGCQueryCompleted = CallResult<SteamUGCQueryCompleted_t>.Create((callback, bIOFailure) =>
             {
@@ -263,7 +263,7 @@ namespace UpGun_Mod_Tools_Launcher
 
             if (!SteamAPI.Init())
             {
-                Console.WriteLine("ERROR:Impossible de se connecter à l'API Steam.");
+                Console.WriteLine("ERROR:Steam n'est pas ouvert ! Veuillez démarrer Steam puis relancer l'application.");
                 return;
             }
 
@@ -316,7 +316,6 @@ namespace UpGun_Mod_Tools_Launcher
                     switch (status)
                     {
                         case EItemUpdateStatus.k_EItemUpdateStatusPreparingConfig: textStatus = "Configuration..."; break;
-                        case EItemUpdateStatus.k_EItemUpdateStatusPreparingContent: textStatus = "Préparation des fichiers..."; break;
                         case EItemUpdateStatus.k_EItemUpdateStatusUploadingContent: textStatus = "Envoi du contenu..."; break;
                         case EItemUpdateStatus.k_EItemUpdateStatusUploadingPreviewFile: textStatus = "Envoi de l'icône..."; break;
                         case EItemUpdateStatus.k_EItemUpdateStatusCommittingChanges: textStatus = "Validation..."; break;
@@ -370,7 +369,7 @@ namespace UpGun_Mod_Tools_Launcher
                 SteamUGC.SetItemTags(m_CurrentUpdateHandle, listTags);
             }
 
-            SteamAPICall_t apiCall = SteamUGC.SubmitItemUpdate(m_CurrentUpdateHandle, "Mise à jour");
+            SteamAPICall_t apiCall = SteamUGC.SubmitItemUpdate(m_CurrentUpdateHandle, "");
             m_SubmitItemUpdate.Set(apiCall);
         }
     }
