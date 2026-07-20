@@ -18,9 +18,19 @@ namespace UpGun_Mod_Tools_Launcher
         private readonly bool estUneCreation = false;
         private readonly string dossierEnvoiUnique = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DONT_DELETE");
 
+        // Timer pour la barre de progression
+        private Timer timerProgress;
+
         public Form2()
         {
             InitializeComponent();
+
+            // Initialisation du Timer de progression
+            timerProgress = new Timer();
+            timerProgress.Interval = 100; // Rafraîchissement toutes les 100ms
+            timerProgress.Tick += TimerProgress_Tick;
+            this.FormClosing += Form2_FormClosing; // Pour nettoyer à la fermeture
+
             this.BtnSelectPak.Click -= this.BtnSelectPak_Click; this.BtnSelectPak.Click += this.BtnSelectPak_Click;
             this.BtnSelectIcon.Click -= this.BtnSelectIcon_Click; this.BtnSelectIcon.Click += this.BtnSelectIcon_Click;
             this.BtnCloseWindowPublish.Click -= this.BtnCloseWindowPublish_Click; this.BtnCloseWindowPublish.Click += this.BtnCloseWindowPublish_Click;
@@ -67,6 +77,34 @@ namespace UpGun_Mod_Tools_Launcher
             }
         }
 
+        private void TimerProgress_Tick(object sender, EventArgs e)
+        {
+            if (m_CurrentUpdateHandle != UGCUpdateHandle_t.Invalid)
+            {
+                EItemUpdateStatus status = SteamUGC.GetItemUpdateProgress(m_CurrentUpdateHandle, out ulong bytesProcessed, out ulong bytesTotal);
+                string textStatus = "Préparation...";
+
+                switch (status)
+                {
+                    case EItemUpdateStatus.k_EItemUpdateStatusPreparingConfig: textStatus = "Configuration..."; break;
+                    case EItemUpdateStatus.k_EItemUpdateStatusPreparingContent: textStatus = "Préparation des fichiers..."; break;
+                    case EItemUpdateStatus.k_EItemUpdateStatusUploadingContent: textStatus = "Envoi du contenu..."; break;
+                    case EItemUpdateStatus.k_EItemUpdateStatusUploadingPreviewFile: textStatus = "Envoi de l'icône..."; break;
+                    case EItemUpdateStatus.k_EItemUpdateStatusCommittingChanges: textStatus = "Validation finale..."; break;
+                }
+
+                if (bytesTotal > 0)
+                {
+                    int progress = (int)((bytesProcessed * 100) / bytesTotal);
+                    BtnPublishMod.Text = $"{textStatus} ({progress}%)";
+                }
+                else
+                {
+                    BtnPublishMod.Text = textStatus;
+                }
+            }
+        }
+
         private void GererEtatInterface(bool actif)
         {
             BtnSelectPak.Enabled = actif;
@@ -76,6 +114,12 @@ namespace UpGun_Mod_Tools_Launcher
             checkedListBox1.Enabled = actif;
             BtnPublishMod.Enabled = actif;
             BtnCloseWindowPublish.Enabled = actif;
+
+            if (actif)
+            {
+                BtnPublishMod.Text = estUneCreation ? "Publish Mod" : "Update Mod";
+                timerProgress.Stop();
+            }
         }
 
         private void NettoyerDossierPassage()
@@ -142,6 +186,7 @@ namespace UpGun_Mod_Tools_Launcher
 
             if (estUneCreation)
             {
+                BtnPublishMod.Text = "Création du Mod sur Steam...";
                 AppId_t appId = new AppId_t(m_AppIdCible);
                 SteamAPICall_t apiCall = SteamUGC.CreateItem(appId, EWorkshopFileType.k_EWorkshopFileTypeCommunity);
                 m_CreateItem.Set(apiCall);
@@ -178,12 +223,10 @@ namespace UpGun_Mod_Tools_Launcher
                 NettoyerDossierPassage();
                 Directory.CreateDirectory(dossierEnvoiUnique);
 
-                // On copie UNIQUEMENT le fichier .pak que tu as sélectionné
                 string nomDuPak = Path.GetFileName(PathPak.Text);
                 string cheminSecurisePak = Path.Combine(dossierEnvoiUnique, nomDuPak);
                 File.Copy(PathPak.Text, cheminSecurisePak, true);
 
-                // On donne ce dossier propre à Steam (il ne contient QUE ton .pak, plus aucun risque de dossier à 1.2 Go)
                 SteamUGC.SetItemContent(m_CurrentUpdateHandle, dossierEnvoiUnique);
 
                 if (!string.IsNullOrEmpty(SelectFileIcon) && File.Exists(SelectFileIcon))
@@ -200,11 +243,14 @@ namespace UpGun_Mod_Tools_Launcher
 
                 SteamAPICall_t apiCall = SteamUGC.SubmitItemUpdate(m_CurrentUpdateHandle, "Mise à jour");
                 m_SubmitItemUpdate.Set(apiCall);
+
+                // Démarrage du suivi de la progression
+                timerProgress.Start();
             }
             catch (Exception ex)
             {
                 GererEtatInterface(true);
-                NettoyerDossierPassage(); // En cas de plantage, on efface tout de suite
+                NettoyerDossierPassage();
                 MessageBox.Show("Erreur préparation : " + ex.Message, "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -213,7 +259,7 @@ namespace UpGun_Mod_Tools_Launcher
         {
             GererEtatInterface(true);
 
-            // NETTOYAGE TOTAL : Steam a fini de lire les fichiers, on détruit instantanément le dossier d'envoi
+            // NETTOYAGE TOTAL
             NettoyerDossierPassage();
 
             if (bIOFailure || callback.m_eResult != EResult.k_EResultOK)
@@ -246,6 +292,15 @@ namespace UpGun_Mod_Tools_Launcher
                     SelectFileIcon = openFileDialog.FileName;
                     textBox5.Text = SelectFileIcon;
                 }
+            }
+        }
+
+        private void Form2_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (timerProgress != null)
+            {
+                timerProgress.Stop();
+                timerProgress.Dispose();
             }
         }
 

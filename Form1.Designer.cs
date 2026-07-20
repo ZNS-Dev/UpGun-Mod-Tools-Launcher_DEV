@@ -34,9 +34,8 @@
             this.ListBoxWorkshopItem = new System.Windows.Forms.ListBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.BtnDiscordModding = new System.Windows.Forms.ToolStripMenuItem();
-            this.upGunToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.upGunModdingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.BtnGithub = new System.Windows.Forms.ToolStripMenuItem();
+            this.BtnDiscordUG = new System.Windows.Forms.ToolStripMenuItem();
+            this.BtnDiscordUGModding = new System.Windows.Forms.ToolStripMenuItem();
             this.startUpGunToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.textBox2 = new System.Windows.Forms.TextBox();
@@ -82,7 +81,6 @@
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.BtnDiscordModding,
-            this.BtnGithub,
             this.startUpGunToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
@@ -93,30 +91,25 @@
             // BtnDiscordModding
             // 
             this.BtnDiscordModding.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.upGunToolStripMenuItem,
-            this.upGunModdingToolStripMenuItem});
+            this.BtnDiscordUG,
+            this.BtnDiscordUGModding});
             this.BtnDiscordModding.Name = "BtnDiscordModding";
             this.BtnDiscordModding.Size = new System.Drawing.Size(59, 20);
             this.BtnDiscordModding.Text = "Discord";
             // 
-            // upGunToolStripMenuItem
+            // BtnDiscordUG
             // 
-            this.upGunToolStripMenuItem.Name = "upGunToolStripMenuItem";
-            this.upGunToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
-            this.upGunToolStripMenuItem.Text = "UpGun";
-            this.upGunToolStripMenuItem.Click += new System.EventHandler(this.upGunToolStripMenuItem_Click);
+            this.BtnDiscordUG.Name = "BtnDiscordUG";
+            this.BtnDiscordUG.Size = new System.Drawing.Size(180, 22);
+            this.BtnDiscordUG.Text = "UpGun";
+            this.BtnDiscordUG.Click += new System.EventHandler(this.BtnDiscordUG_Click);
             // 
-            // upGunModdingToolStripMenuItem
+            // BtnDiscordUGModding
             // 
-            this.upGunModdingToolStripMenuItem.Name = "upGunModdingToolStripMenuItem";
-            this.upGunModdingToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
-            this.upGunModdingToolStripMenuItem.Text = "UpGun Modding";
-            // 
-            // BtnGithub
-            // 
-            this.BtnGithub.Name = "BtnGithub";
-            this.BtnGithub.Size = new System.Drawing.Size(55, 20);
-            this.BtnGithub.Text = "Github";
+            this.BtnDiscordUGModding.Name = "BtnDiscordUGModding";
+            this.BtnDiscordUGModding.Size = new System.Drawing.Size(180, 22);
+            this.BtnDiscordUGModding.Text = "UpGun Modding";
+            this.BtnDiscordUGModding.Click += new System.EventHandler(this.BtnDiscordUGModding_Click);
             // 
             // startUpGunToolStripMenuItem
             // 
@@ -139,8 +132,8 @@
             this.textBox1.Size = new System.Drawing.Size(534, 31);
             this.textBox1.TabIndex = 0;
             this.textBox1.TabStop = false;
-            this.textBox1.Text = "WARNING! There’s a problem launching UpGun on Steam, you shouldn’t open it while " +
-    "the tool is open. Press Start UpGun or close the tool to launch it via Steam.";
+            this.textBox1.Text = "WARNING! You can’t launch UpGun on Steam with the tool open. Press Start UpGun or" +
+    " close the tool to launch it via Steam.";
             this.textBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // textBox2
@@ -193,9 +186,8 @@
         private System.Windows.Forms.ListBox ListBoxWorkshopItem;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem BtnDiscordModding;
-        private System.Windows.Forms.ToolStripMenuItem BtnGithub;
-        private System.Windows.Forms.ToolStripMenuItem upGunToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem upGunModdingToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem BtnDiscordUG;
+        private System.Windows.Forms.ToolStripMenuItem BtnDiscordUGModding;
         private System.Windows.Forms.ToolStripMenuItem startUpGunToolStripMenuItem;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.TextBox textBox2;
