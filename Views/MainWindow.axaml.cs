@@ -16,8 +16,7 @@ namespace UpGun_Mod_Tools_Launcher.Views
     {
         private const uint APP_ID_CIBLE = 311210;
         // Lire la version dynamiquement, ou fallback à 1.0.0 si la version n'est pas disponible (ex: build en mode debug)
-        private static readonly string VERSION_ACTUELLE =
-    Assembly.GetExecutingAssembly().GetName().Version?.ToString(3) ?? "1.0.0";
+        private static readonly string VERSION_ACTUELLE = Assembly.GetExecutingAssembly().GetName().Version?.ToString(3) ?? "1.0.0";
 
         private readonly ObservableCollection<WorkshopItem> _items = new();
 
@@ -101,7 +100,8 @@ namespace UpGun_Mod_Tools_Launcher.Views
                         Arguments = $"--worker-query {APP_ID_CIBLE}",
                         UseShellExecute = false,
                         RedirectStandardOutput = true,
-                        CreateNoWindow = true
+                        CreateNoWindow = true,
+                        WorkingDirectory = AppContext.BaseDirectory
                     };
 
                     using var process = Process.Start(startInfo);

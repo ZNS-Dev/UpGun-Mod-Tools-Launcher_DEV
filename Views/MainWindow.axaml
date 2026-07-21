@@ -19,7 +19,7 @@
     <Grid Grid.Row="0" Name="TitleBarArea" ColumnDefinitions="Auto,*,Auto,Auto,Auto" Background="Transparent"
           PointerPressed="TitleBarArea_PointerPressed">
       <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="16,0,0,0" Spacing="10" VerticalAlignment="Center" IsHitTestVisible="False">
-        <Border Width="22" Height="22" CornerRadius="6" Background="{StaticResource AccentGradientBrush}"/>
+        <Image Source="avares://UpGunModToolsLauncher/Assets/ModLauncher.ico" Width="22" Height="22" VerticalAlignment="Center"/>
         <TextBlock Text="UpGun Mod Tools" FontWeight="SemiBold" FontSize="13.5" VerticalAlignment="Center"/>
       </StackPanel>
 

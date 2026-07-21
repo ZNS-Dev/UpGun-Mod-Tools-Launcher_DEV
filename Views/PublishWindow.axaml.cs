@@ -168,7 +168,8 @@ namespace UpGun_Mod_Tools_Launcher.Views
                 Arguments = $"--worker-publish {m_AppIdCible} {m_FileId.m_PublishedFileId} \"{titreB64}\" \"{descB64}\" \"{pakB64}\" \"{iconB64}\" \"{tagsB64}\"",
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
-                CreateNoWindow = true
+                CreateNoWindow = true,
+                WorkingDirectory = AppContext.BaseDirectory
             };
 
             workerProcess = new Process { StartInfo = startInfo, EnableRaisingEvents = true };

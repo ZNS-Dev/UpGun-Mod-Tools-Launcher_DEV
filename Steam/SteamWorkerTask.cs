@@ -18,11 +18,29 @@ namespace UpGun_Mod_Tools_Launcher.Steam
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern bool SetEnvironmentVariableWin(string lpName, string lpValue);
 
+        [DllImport("libc", EntryPoint = "setenv", SetLastError = true)]
+        private static extern int SetEnvLinux(string name, string value, int overwrite);
+
         private static void SetSteamAppIdEnv(string value)
         {
-            // SetEnvironmentVariable via P/Invoke kernel32 n'existe que sous Windows.
-            // On utilise l'API .NET standard, portable sur Linux/macOS.
             Environment.SetEnvironmentVariable("SteamAppId", value);
+
+            try
+            {
+                if (OperatingSystem.IsWindows())
+                {
+                    SetEnvironmentVariableWin("SteamAppId", value);
+                }
+                else if (OperatingSystem.IsLinux() || OperatingSystem.IsMacOS())
+                {
+                    SetEnvLinux("SteamAppId", value, 1);
+                }
+
+                // Écrit steam_appid.txt dans le dossier courant ET dans le dossier de l'exécutable
+                File.WriteAllText("steam_appid.txt", value);
+                File.WriteAllText(Path.Combine(AppContext.BaseDirectory, "steam_appid.txt"), value);
+            }
+            catch { }
         }
 
         private static CallResult<SteamUGCQueryCompleted_t> m_SteamUGCQueryCompleted;
@@ -40,9 +58,11 @@ namespace UpGun_Mod_Tools_Launcher.Steam
             uint appId = uint.Parse(args[1]);
             SetSteamAppIdEnv(appId.ToString());
 
-            if (!SteamAPI.Init())
+            ESteamAPIInitResult initResult = SteamAPI.InitEx(out string steamError);
+
+            if (initResult != ESteamAPIInitResult.k_ESteamAPIInitResult_OK)
             {
-                Console.WriteLine("ERROR:Steam n'est pas ouvert ! Veuillez démarrer Steam puis relancer l'application.");
+                Console.WriteLine($"ERROR:Échec d'initialisation Steam [{initResult}] : {steamError}");
                 return;
             }
 
@@ -100,9 +120,11 @@ namespace UpGun_Mod_Tools_Launcher.Steam
 
             SetSteamAppIdEnv(appId.ToString());
 
-            if (!SteamAPI.Init())
+            ESteamAPIInitResult initResult = SteamAPI.InitEx(out string steamError);
+
+            if (initResult != ESteamAPIInitResult.k_ESteamAPIInitResult_OK)
             {
-                Console.WriteLine("ERROR:Steam n'est pas ouvert ! Veuillez démarrer Steam puis relancer l'application.");
+                Console.WriteLine($"ERROR:Échec d'initialisation Steam [{initResult}] : {steamError}");
                 return;
             }
 
