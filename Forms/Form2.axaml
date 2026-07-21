@@ -3,7 +3,7 @@
         xmlns:local="clr-namespace:UpGun_Mod_Tools_Launcher.Forms"
         x:Class="UpGun_Mod_Tools_Launcher.Forms.Form2"
         Title="Publish Mod"
-        Width="412" Height="520"
+        Width="412" Height="600"
         CanResize="False"
         WindowStartupLocation="CenterOwner"
         Background="#404040">
