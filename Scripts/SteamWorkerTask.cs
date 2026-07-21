@@ -19,11 +19,33 @@ namespace UpGun_Mod_Tools_Launcher
         private static bool isRunning = true;
         private static PublishedFileId_t processedFileId;
 
+        private static readonly string LogsDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Logs");
+        private static readonly string LogFilePath = Path.Combine(LogsDirectory, "logs.txt");
+
+        /// <summary>
+        /// Writes a line to the console and, if it contains "ERROR:", also appends it to logs.txt.
+        /// </summary>
+        private static void WriteLine(string message)
+        {
+            Console.WriteLine(message);
+
+            try
+            {
+                Directory.CreateDirectory(LogsDirectory);
+                string timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                File.AppendAllText(LogFilePath, $"[{timestamp}] {message}{Environment.NewLine}");
+            }
+            catch
+            {
+                // Silently ignore file write errors to avoid breaking the worker
+            }
+        }
+
         public static void ExecuteWorkshopSearch(string[] args)
         {
-            Console.WriteLine("=== Starting Steam Worker for Workshop Publish ===");
+            WriteLine("=== Starting Steam Worker for Workshop Publish ===");
             if (args.Length < 2) return;
-            Console.WriteLine("Arguments received: " + string.Join(", ", args));
+            WriteLine("Arguments received: " + string.Join(", ", args));
 
             isRunning = true;
             m_CurrentUpdateHandle = UGCUpdateHandle_t.Invalid;
@@ -33,34 +55,32 @@ namespace UpGun_Mod_Tools_Launcher
 
             try
             {
-                if (SteamAPI.RestartAppIfNecessary(new AppId_t(appId)))
-                    return;
-
                 if (!SteamAPI.Init())
                 {
-                    Console.WriteLine("ERROR:Steam is not running! Please start Steam and restart the application.");
+                    WriteLine("ERROR:Steam is not running! Please start Steam and restart the application.");
                     return;
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
-                Console.WriteLine("ERROR:Failed to initialize Steam. Make sure Steam is running and steam_api64.dll is present.");
+                WriteLine(ex.ToString());
+                string nativeLib = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "steam_api64.dll" : "libsteam_api.so";
+                WriteLine($"ERROR:Failed to initialize Steam. Make sure Steam is running and {nativeLib} is present.");
                 return;
             }
 
-            Console.WriteLine("Steam initialized.");
-            Console.WriteLine($"SteamID : {SteamUser.GetSteamID().m_SteamID}");
-            Console.WriteLine($"Persona : {SteamFriends.GetPersonaName()}");
-            Console.WriteLine($"AppID   : {SteamUtils.GetAppID().m_AppId}");
+            WriteLine("Steam initialized.");
+            WriteLine($"SteamID : {SteamUser.GetSteamID().m_SteamID}");
+            WriteLine($"Persona : {SteamFriends.GetPersonaName()}");
+            WriteLine($"AppID   : {SteamUtils.GetAppID().m_AppId}");
 
             m_SteamUGCQueryCompleted = CallResult<SteamUGCQueryCompleted_t>.Create((callback, bIOFailure) =>
             {
-                Console.WriteLine("===== QUERY CALLBACK =====");
-                Console.WriteLine($"IO Failure : {bIOFailure}");
-                Console.WriteLine($"Result     : {callback.m_eResult}");
-                Console.WriteLine($"Returned   : {callback.m_unNumResultsReturned}");
-                Console.WriteLine($"Total      : {callback.m_unTotalMatchingResults}");
+                WriteLine("===== QUERY CALLBACK =====");
+                WriteLine($"IO Failure : {bIOFailure}");
+                WriteLine($"Result     : {callback.m_eResult}");
+                WriteLine($"Returned   : {callback.m_unNumResultsReturned}");
+                WriteLine($"Total      : {callback.m_unTotalMatchingResults}");
 
                 if (!bIOFailure && callback.m_eResult == EResult.k_EResultOK)
                 {
@@ -77,7 +97,7 @@ namespace UpGun_Mod_Tools_Launcher
                             }
                             catch { }
 
-                            Console.WriteLine($"{details.m_nPublishedFileId}|{details.m_rgchTitle}|{desc}|{details.m_rgchTags}|{details.m_nFileSize}|{previewUrl}");
+                            WriteLine($"{details.m_nPublishedFileId}|{details.m_rgchTitle}|{desc}|{details.m_rgchTags}|{details.m_nFileSize}|{previewUrl}");
                         }
                     }
                     SteamUGC.ReleaseQueryUGCRequest(callback.m_handle);
@@ -85,7 +105,7 @@ namespace UpGun_Mod_Tools_Launcher
                 isRunning = false;
             });
 
-            Console.WriteLine("Creating query...");
+            WriteLine("Creating query...");
             UGCQueryHandle_t handle = SteamUGC.CreateQueryUserUGCRequest(
                 SteamUser.GetSteamID().GetAccountID(),
                 EUserUGCList.k_EUserUGCList_Published,
@@ -96,12 +116,12 @@ namespace UpGun_Mod_Tools_Launcher
                 1
             );
 
-            Console.WriteLine($"Query Handle = {handle.m_UGCQueryHandle}");
+            WriteLine($"Query Handle = {handle.m_UGCQueryHandle}");
 
-            Console.WriteLine("Sending query...");
+            WriteLine("Sending query...");
             SteamAPICall_t apiCall = SteamUGC.SendQueryUGCRequest(handle);
 
-            Console.WriteLine($"API Call = {apiCall.m_SteamAPICall}");
+            WriteLine($"API Call = {apiCall.m_SteamAPICall}");
 
             m_SteamUGCQueryCompleted.Set(apiCall);
 
@@ -112,7 +132,7 @@ namespace UpGun_Mod_Tools_Launcher
                 SteamAPI.RunCallbacks();
 
                 if (++ticks % 20 == 0)
-                    Console.WriteLine("Waiting callback...");
+                    WriteLine("Waiting callback...");
 
                 Thread.Sleep(50);
             }
@@ -122,13 +142,13 @@ namespace UpGun_Mod_Tools_Launcher
 
         public static void ExecuteWorkshopPublish(string[] args)
         {
-            Console.WriteLine("=== Starting Steam Worker for Workshop Publish ===");
+            WriteLine("=== Starting Steam Worker for Workshop Publish ===");
             if (args.Length < 8)
             {
-                Console.WriteLine("ERROR: Not enough arguments provided for publish worker.");
+                WriteLine("ERROR: Not enough arguments provided for publish worker.");
                 return;
             }
-            Console.WriteLine("Arguments received: " + string.Join(", ", args));
+            WriteLine("Arguments received: " + string.Join(", ", args));
 
             isRunning = true;
             m_CurrentUpdateHandle = UGCUpdateHandle_t.Invalid;
@@ -154,29 +174,30 @@ namespace UpGun_Mod_Tools_Launcher
 
                     if (!SteamAPI.Init())
                     {
-                        Console.WriteLine("ERROR:Steam is not running! Please start Steam and restart the application.");
+                        WriteLine("ERROR:Steam is not running! Please start Steam and restart the application.");
                         return;
                     }
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.ToString());
-                    Console.WriteLine("ERROR:Failed to initialize Steam. Make sure Steam is running and steam_api64.dll is present.");
+                    WriteLine(ex.ToString());
+                    string nativeLib = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "steam_api64.dll" : "libsteam_api.so";
+                    WriteLine($"ERROR:Failed to initialize Steam. Make sure Steam is running and {nativeLib} is present.");
                     return;
                 }
 
-                Console.WriteLine("Steam initialized.");
-                Console.WriteLine($"SteamID : {SteamUser.GetSteamID().m_SteamID}");
-                Console.WriteLine($"Persona : {SteamFriends.GetPersonaName()}");
-                Console.WriteLine($"AppID   : {SteamUtils.GetAppID().m_AppId}");
-                Console.WriteLine(SteamUtils.IsOverlayEnabled());
-                Console.WriteLine(SteamApps.BIsSubscribedApp(new AppId_t(appId)));
+                WriteLine("Steam initialized.");
+                WriteLine($"SteamID : {SteamUser.GetSteamID().m_SteamID}");
+                WriteLine($"Persona : {SteamFriends.GetPersonaName()}");
+                WriteLine($"AppID   : {SteamUtils.GetAppID().m_AppId}");
+                WriteLine($"OverlayEnabled: {SteamUtils.IsOverlayEnabled()}");
+                WriteLine($"SubscribedApp: {SteamApps.BIsSubscribedApp(new AppId_t(appId))}");
 
                 m_CreateItem = CallResult<CreateItemResult_t>.Create((callback, bIOFailure) =>
                 {
                     if (bIOFailure || callback.m_eResult != EResult.k_EResultOK)
                     {
-                        Console.WriteLine("ERROR:Failed to create item on Steam. Code: " + callback.m_eResult);
+                        WriteLine("ERROR:Failed to create item on Steam. Code: " + callback.m_eResult);
                         isRunning = false;
                         return;
                     }
@@ -187,30 +208,30 @@ namespace UpGun_Mod_Tools_Launcher
 
                 m_SubmitItemUpdate = CallResult<SubmitItemUpdateResult_t>.Create((callback, bIOFailure) =>
                 {
-                    Console.WriteLine("==== Submit Callback ====");
-                    Console.WriteLine($"IO Failure : {bIOFailure}");
-                    Console.WriteLine($"Result     : {callback.m_eResult}");
-                    Console.WriteLine($"NeedsAgreement : {callback.m_bUserNeedsToAcceptWorkshopLegalAgreement}");
-                    Console.WriteLine("=========================");
+                    WriteLine("==== Submit Callback ====");
+                    WriteLine($"IO Failure : {bIOFailure}");
+                    WriteLine($"Result     : {callback.m_eResult}");
+                    WriteLine($"NeedsAgreement : {callback.m_bUserNeedsToAcceptWorkshopLegalAgreement}");
+                    WriteLine("=========================");
 
                     if (bIOFailure || callback.m_eResult != EResult.k_EResultOK)
                     {
-                        Console.WriteLine("ERROR:Failed to upload to Steam. Code: " + callback.m_eResult);
+                        WriteLine("ERROR:Failed to upload to Steam. Code: " + callback.m_eResult);
                     }
                     else
                     {
-                        Console.WriteLine("SUCCESS:" + processedFileId.m_PublishedFileId);
+                        WriteLine("SUCCESS:" + processedFileId.m_PublishedFileId);
                     }
 
                     isRunning = false;
                 });
 
-                Console.WriteLine(processedFileId.m_PublishedFileId + "\n");
-                Console.WriteLine(processedFileId == PublishedFileId_t.Invalid);
+                WriteLine(processedFileId.m_PublishedFileId + "\n");
+                WriteLine($"IsInvalid: {processedFileId == PublishedFileId_t.Invalid}");
 
                 if (processedFileId.m_PublishedFileId == 0 || processedFileId == PublishedFileId_t.Invalid)
                 {
-                    Console.WriteLine("PROGRESS:Creating Mod on Steam...");
+                    WriteLine("PROGRESS:Creating Mod on Steam...");
                     SteamAPICall_t apiCall = SteamUGC.CreateItem(new AppId_t(appId), EWorkshopFileType.k_EWorkshopFileTypeCommunity);
                     m_CreateItem.Set(apiCall);
                 }
@@ -239,11 +260,11 @@ namespace UpGun_Mod_Tools_Launcher
                         if (bytesTotal > 0)
                         {
                             int progress = (int)((bytesProcessed * 100) / bytesTotal);
-                            Console.WriteLine($"PROGRESS:{textStatus} ({progress}%)");
+                            WriteLine($"PROGRESS:{textStatus} ({progress}%)");
                         }
                         else
                         {
-                            Console.WriteLine($"PROGRESS:{textStatus}");
+                            WriteLine($"PROGRESS:{textStatus}");
                         }
                     }
 
@@ -260,73 +281,73 @@ namespace UpGun_Mod_Tools_Launcher
 
         private static void StartUpdate(uint appId, PublishedFileId_t fileId, string title, string desc, string pakPath, string iconPath, string tags)
         {
-            Console.WriteLine("========== StartUpdate ==========");
-            Console.WriteLine($"AppId      : {appId}");
-            Console.WriteLine($"FileId     : {fileId.m_PublishedFileId}");
-            Console.WriteLine($"Title      : {title}");
-            Console.WriteLine($"Description: {desc}");
-            Console.WriteLine($"PakPath    : {pakPath}");
-            Console.WriteLine($"IconPath   : {iconPath}");
-            Console.WriteLine($"Tags       : {tags}");
+            WriteLine("========== StartUpdate ==========");
+            WriteLine($"AppId      : {appId}");
+            WriteLine($"FileId     : {fileId.m_PublishedFileId}");
+            WriteLine($"Title      : {title}");
+            WriteLine($"Description: {desc}");
+            WriteLine($"PakPath    : {pakPath}");
+            WriteLine($"IconPath   : {iconPath}");
+            WriteLine($"Tags       : {tags}");
 
             AppId_t appIdObj = new AppId_t(appId);
 
-            Console.WriteLine("Calling StartItemUpdate...");
+            WriteLine("Calling StartItemUpdate...");
             m_CurrentUpdateHandle = SteamUGC.StartItemUpdate(appIdObj, fileId);
-            Console.WriteLine($"UpdateHandle = {m_CurrentUpdateHandle.m_UGCUpdateHandle}");
+            WriteLine($"UpdateHandle = {m_CurrentUpdateHandle.m_UGCUpdateHandle}");
 
-            Console.WriteLine("SetItemTitle...");
+            WriteLine("SetItemTitle...");
             bool ok = SteamUGC.SetItemTitle(m_CurrentUpdateHandle, title);
-            Console.WriteLine($" -> {ok}");
+            WriteLine($" -> {ok}");
 
-            Console.WriteLine("SetItemDescription...");
+            WriteLine("SetItemDescription...");
             ok = SteamUGC.SetItemDescription(m_CurrentUpdateHandle, desc);
-            Console.WriteLine($" -> {ok}");
+            WriteLine($" -> {ok}");
 
             string uploadFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DONT_DELETE");
 
-            Console.WriteLine($"Upload folder = {uploadFolder}");
+            WriteLine($"Upload folder = {uploadFolder}");
 
             if (Directory.Exists(uploadFolder))
             {
-                Console.WriteLine("Deleting previous upload folder...");
+                WriteLine("Deleting previous upload folder...");
                 try
                 {
                     Directory.Delete(uploadFolder, true);
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Delete failed: " + ex);
+                    WriteLine("Delete failed: " + ex);
                 }
             }
 
             Directory.CreateDirectory(uploadFolder);
 
-            Console.WriteLine("Created upload folder.");
+            WriteLine("Created upload folder.");
 
-            Console.WriteLine("Pak exists = " + File.Exists(pakPath));
+            WriteLine("Pak exists = " + File.Exists(pakPath));
 
             string pakFileName = Path.GetFileName(pakPath);
             string copiedFile = Path.Combine(uploadFolder, pakFileName);
 
             File.Copy(pakPath, copiedFile, true);
 
-            Console.WriteLine($"Copied pak to : {copiedFile}");
-            Console.WriteLine($"Copied exists : {File.Exists(copiedFile)}");
+            WriteLine($"Copied pak to : {copiedFile}");
+            WriteLine($"Copied exists : {File.Exists(copiedFile)}");
 
-            Console.WriteLine("SetItemContent...");
+            WriteLine("SetItemContent...");
             ok = SteamUGC.SetItemContent(m_CurrentUpdateHandle, uploadFolder);
-            Console.WriteLine($" -> {ok}");
+            WriteLine($" -> {ok}");
 
             if (!string.IsNullOrWhiteSpace(iconPath))
             {
-                Console.WriteLine($"Preview exists = {File.Exists(iconPath)}");
+                WriteLine($"Preview exists = {File.Exists(iconPath)}");
 
                 if (File.Exists(iconPath))
                 {
-                    Console.WriteLine("SetItemPreview...");
+                    WriteLine("SetItemPreview...");
                     ok = SteamUGC.SetItemPreview(m_CurrentUpdateHandle, iconPath);
-                    Console.WriteLine($" -> {ok}");
+                    WriteLine($" -> {ok}");
                 }
             }
 
@@ -337,23 +358,23 @@ namespace UpGun_Mod_Tools_Launcher
                     .Select(t => t.Trim())
                     .ToList();
 
-                Console.WriteLine("Tags:");
+                WriteLine("Tags:");
                 foreach (string tag in tagList)
-                    Console.WriteLine(" - " + tag);
+                    WriteLine(" - " + tag);
 
-                Console.WriteLine("SetItemTags...");
+                WriteLine("SetItemTags...");
                 ok = SteamUGC.SetItemTags(m_CurrentUpdateHandle, tagList);
-                Console.WriteLine($" -> {ok}");
+                WriteLine($" -> {ok}");
             }
 
-            Console.WriteLine("Submitting update...");
+            WriteLine("Submitting update...");
             SteamAPICall_t apiCall = SteamUGC.SubmitItemUpdate(m_CurrentUpdateHandle, "");
 
-            Console.WriteLine($"SubmitItemUpdate Handle = {apiCall.m_SteamAPICall}");
+            WriteLine($"SubmitItemUpdate Handle = {apiCall.m_SteamAPICall}");
 
             m_SubmitItemUpdate.Set(apiCall);
 
-            Console.WriteLine("========== End StartUpdate ==========");
+            WriteLine("========== End StartUpdate ==========");
         }
 
         private static void CleanTemporaryFolder()
