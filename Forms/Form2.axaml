@@ -1,0 +1,45 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="UpGun_Mod_Tools_Launcher.Forms.Form2"
+        Title="Workshop Item"
+        Width="500" Height="480"
+        CanResize="False"
+        WindowStartupLocation="CenterOwner"
+        Background="#404040">
+
+    <Grid RowDefinitions="*, Auto" Margin="15">
+        <StackPanel Grid.Row="0" Spacing="10">
+            <!-- Title -->
+            <TextBlock Text="Title:" Foreground="White" FontWeight="Bold" />
+            <TextBox x:Name="TxtTitle" Watermark="My Mod Name" />
+
+            <!-- Description -->
+            <TextBlock Text="Description:" Foreground="White" FontWeight="Bold" />
+            <TextBox x:Name="TxtDescription" Height="80" TextWrapping="Wrap" AcceptsReturn="True" Watermark="Describe your mod..." />
+
+            <!-- Tags -->
+            <TextBlock Text="Tags (separated by commas):" Foreground="White" FontWeight="Bold" />
+            <TextBox x:Name="TxtTags" Watermark="Mod, Skin, Fun" />
+
+            <!-- Folder Content Path -->
+            <TextBlock Text="Content Folder:" Foreground="White" FontWeight="Bold" />
+            <Grid ColumnDefinitions="*, Auto">
+                <TextBox x:Name="TxtFolderPath" Grid.Column="0" IsReadOnly="True" Watermark="Select mod content directory..." />
+                <Button Content="Browse..." Grid.Column="1" Margin="5,0,0,0" Click="BtnBrowseFolder_Click" />
+            </Grid>
+
+            <!-- Preview Image Path -->
+            <TextBlock Text="Preview Image (PNG/JPG):" Foreground="White" FontWeight="Bold" />
+            <Grid ColumnDefinitions="*, Auto">
+                <TextBox x:Name="TxtImagePath" Grid.Column="0" IsReadOnly="True" Watermark="Select preview image file..." />
+                <Button Content="Browse..." Grid.Column="1" Margin="5,0,0,0" Click="BtnBrowseImage_Click" />
+            </Grid>
+        </StackPanel>
+
+        <!-- Actions -->
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10" Margin="0,15,0,0">
+            <Button x:Name="BtnSubmit" Content="Upload" Width="100" HorizontalContentAlignment="Center" Click="BtnSubmit_Click" />
+            <Button Content="Cancel" Width="100" HorizontalContentAlignment="Center" Click="BtnCancel_Click" />
+        </StackPanel>
+    </Grid>
+</Window>
