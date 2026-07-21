@@ -23,7 +23,7 @@
     <RuntimeIdentifiers>win-x64;linux-x64;osx-x64;osx-arm64</RuntimeIdentifiers>
     <PublishSelfContained>true</PublishSelfContained>
     <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
-    <ApplicationIcon>ModLauncher.ico</ApplicationIcon>
+    <ApplicationIcon>Assets\ModLauncher.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -40,7 +40,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="ModLauncher.ico" />
+    <Content Include="Assets\ModLauncher.ico" />
   </ItemGroup>
 
   <ItemGroup>
