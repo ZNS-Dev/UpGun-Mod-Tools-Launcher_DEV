@@ -10,12 +10,12 @@ namespace UpGun_Mod_Tools_Launcher.Services
     public class UpdateInfo
     {
         public bool IsUpdateAvailable { get; set; }
-        public Version CurrentVersion { get; set; } = new(1, 0, 0);
-        public Version LatestVersion { get; set; } = new(1, 0, 0);
+        public Version CurrentVersion { get; set; } = new Version(1, 0, 0);
+        public Version LatestVersion { get; set; } = new Version(1, 0, 0);
         public string ReleaseNotes { get; set; } = string.Empty;
         public string ReleasePageUrl { get; set; } = string.Empty;
-        public string? DownloadUrl { get; set; }
-        public string? AssetFileName { get; set; }
+        public string DownloadUrl { get; set; }
+        public string AssetFileName { get; set; }
     }
 
     public class UpdateCheckerService
