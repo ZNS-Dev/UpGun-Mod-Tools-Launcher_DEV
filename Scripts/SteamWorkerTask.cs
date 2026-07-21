@@ -123,7 +123,7 @@ namespace UpGun_Mod_Tools_Launcher
         public static void ExecuteWorkshopPublish(string[] args)
         {
             Console.WriteLine("=== Starting Steam Worker for Workshop Publish ===");
-            if (args.Length < 9) // <-- Correction ici (9 au lieu de 8)
+            if (args.Length < 8)
             {
                 Console.WriteLine("ERROR: Not enough arguments provided for publish worker.");
                 return;
@@ -137,9 +137,6 @@ namespace UpGun_Mod_Tools_Launcher
             {
                 uint appId = uint.Parse(args[1]);
 
-                Console.WriteLine(SteamUtils.IsOverlayEnabled());
-                Console.WriteLine(SteamApps.BIsSubscribedApp(new AppId_t(appId)));
-
                 processedFileId = new PublishedFileId_t(ulong.Parse(args[2]));
                 string title = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(args[3]));
                 string desc = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(args[4]));
@@ -147,6 +144,7 @@ namespace UpGun_Mod_Tools_Launcher
                 string iconPath = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(args[6]));
                 string tags = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(args[7]));
 
+                // IMPORTANT: Set SteamAppId BEFORE any SteamAPI calls
                 Environment.SetEnvironmentVariable("SteamAppId", appId.ToString());
 
                 try
@@ -171,6 +169,8 @@ namespace UpGun_Mod_Tools_Launcher
                 Console.WriteLine($"SteamID : {SteamUser.GetSteamID().m_SteamID}");
                 Console.WriteLine($"Persona : {SteamFriends.GetPersonaName()}");
                 Console.WriteLine($"AppID   : {SteamUtils.GetAppID().m_AppId}");
+                Console.WriteLine(SteamUtils.IsOverlayEnabled());
+                Console.WriteLine(SteamApps.BIsSubscribedApp(new AppId_t(appId)));
 
                 m_CreateItem = CallResult<CreateItemResult_t>.Create((callback, bIOFailure) =>
                 {
