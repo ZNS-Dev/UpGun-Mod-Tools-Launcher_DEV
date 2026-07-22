@@ -17,7 +17,6 @@ namespace UpGun_Mod_Tools_Launcher
                 }
                 else if (args[0] == "--worker-publish")
                 {
-                    // FIX: Appel de la méthode de publication au lieu de la recherche
                     SteamWorkerTask.ExecuteWorkshopPublish(args);
                     return;
                 }

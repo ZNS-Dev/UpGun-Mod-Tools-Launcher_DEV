@@ -50,10 +50,6 @@ namespace UpGun_Mod_Tools_Launcher
             this.textBox5.AllowDrop = true;
             this.textBox5.DragEnter += Icon_DragEnter;
             this.textBox5.DragDrop += Icon_DragDrop;
-
-            this.ImageIconPreview.AllowDrop = true;
-            this.ImageIconPreview.DragEnter += Icon_DragEnter;
-            this.ImageIconPreview.DragDrop += Icon_DragDrop;
         }
 
         private void BtnCloseWindowPublish_Click(object sender, EventArgs e) => this.Close();
@@ -181,7 +177,7 @@ namespace UpGun_Mod_Tools_Launcher
                             ManageUIState(true);
                             string generatedFileId = argsData.Data.Replace("SUCCESS:", "");
 
-                            if (MessageBox.Show("Publish successful! Open the Workshop page?", "Success", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
+                            if (MessageBox.Show("Mod published successfully! Would you like to open its Workshop page?", "Success", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
                             {
                                 Process.Start("steam://url/CommunityFilePage/" + generatedFileId);
                             }
@@ -189,10 +185,24 @@ namespace UpGun_Mod_Tools_Launcher
                             this.DialogResult = DialogResult.OK;
                             this.Close();
                         }
+                        else if (argsData.Data.StartsWith("ERROR GAME NOT FOUND:"))
+                        {
+                            ManageUIState(true);
+                            string msg = argsData.Data.Replace("ERROR GAME NOT FOUND:", "");
+                            MessageBox.Show(msg, "Game Not Owned", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                            try
+                            {
+                                Process.Start($"steam://store/{m_TargetAppId}");
+                            }
+                            catch { }
+                        }
                         else if (argsData.Data.StartsWith("ERROR:"))
                         {
                             ManageUIState(true);
                             MessageBox.Show(argsData.Data.Replace("ERROR:", ""), "Steam Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            this.Close();
+                            this.Dispose();
                         }
                     });
                 }
@@ -255,7 +265,7 @@ namespace UpGun_Mod_Tools_Launcher
                 }
                 else
                 {
-                    MessageBox.Show("Please drop a file in .pak format!", "Unsupported File", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("Please drop a .pak file!", "Unsupported File", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
         }
@@ -291,7 +301,7 @@ namespace UpGun_Mod_Tools_Launcher
                 }
                 else
                 {
-                    MessageBox.Show("Please drop an image in .png format!", "Unsupported Format", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("Please drop a .png image!", "Unsupported Format", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
         }
@@ -321,8 +331,8 @@ namespace UpGun_Mod_Tools_Launcher
                             if (img.Width != 512 || img.Height != 512)
                             {
                                 MessageBox.Show(
-                                    $"Selected image is {img.Width}x{img.Height} pixels.\n\nSteam strongly recommends an exact size of 512x512 pixels for mod icons.",
-                                    "Warning - Non-recommended Icon Dimensions",
+                                    $"Selected image dimensions are {img.Width}x{img.Height} pixels.\n\nSteam strongly recommends an exact size of 512x512 pixels for mod icons.",
+                                    "Warning - Recommended Icon Dimensions",
                                     MessageBoxButtons.OK,
                                     MessageBoxIcon.Warning
                                 );

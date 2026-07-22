@@ -78,9 +78,9 @@
             // 
             // BtnCloseWindowPublish
             // 
-            this.BtnCloseWindowPublish.Location = new System.Drawing.Point(258, 370);
+            this.BtnCloseWindowPublish.Location = new System.Drawing.Point(248, 367);
             this.BtnCloseWindowPublish.Name = "BtnCloseWindowPublish";
-            this.BtnCloseWindowPublish.Size = new System.Drawing.Size(75, 23);
+            this.BtnCloseWindowPublish.Size = new System.Drawing.Size(96, 23);
             this.BtnCloseWindowPublish.TabIndex = 9;
             this.BtnCloseWindowPublish.Text = "Cancel";
             this.BtnCloseWindowPublish.UseVisualStyleBackColor = true;
@@ -88,9 +88,9 @@
             // 
             // BtnPublishMod
             // 
-            this.BtnPublishMod.Location = new System.Drawing.Point(258, 341);
+            this.BtnPublishMod.Location = new System.Drawing.Point(248, 338);
             this.BtnPublishMod.Name = "BtnPublishMod";
-            this.BtnPublishMod.Size = new System.Drawing.Size(75, 23);
+            this.BtnPublishMod.Size = new System.Drawing.Size(96, 23);
             this.BtnPublishMod.TabIndex = 10;
             this.BtnPublishMod.Text = "Publish Mod";
             this.BtnPublishMod.UseVisualStyleBackColor = true;
@@ -117,9 +117,9 @@
             "Upgrade",
             "Weapon",
             "WIP"});
-            this.checkedListBox1.Location = new System.Drawing.Point(53, 295);
+            this.checkedListBox1.Location = new System.Drawing.Point(53, 298);
             this.checkedListBox1.Name = "checkedListBox1";
-            this.checkedListBox1.Size = new System.Drawing.Size(156, 139);
+            this.checkedListBox1.Size = new System.Drawing.Size(156, 136);
             this.checkedListBox1.Sorted = true;
             this.checkedListBox1.TabIndex = 0;
             this.checkedListBox1.TabStop = false;
@@ -249,6 +249,8 @@
             this.Controls.Add(this.textBox2);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "Form2";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Publish Mod";

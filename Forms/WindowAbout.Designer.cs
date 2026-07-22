@@ -40,14 +40,14 @@
             this.TxtBoxMessageAbout.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.TxtBoxMessageAbout.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.TxtBoxMessageAbout.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.TxtBoxMessageAbout.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TxtBoxMessageAbout.Font = new System.Drawing.Font("Myanmar Text", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TxtBoxMessageAbout.ForeColor = System.Drawing.SystemColors.Window;
-            this.TxtBoxMessageAbout.Location = new System.Drawing.Point(61, 46);
+            this.TxtBoxMessageAbout.Location = new System.Drawing.Point(61, 39);
             this.TxtBoxMessageAbout.Multiline = true;
             this.TxtBoxMessageAbout.Name = "TxtBoxMessageAbout";
             this.TxtBoxMessageAbout.ReadOnly = true;
             this.TxtBoxMessageAbout.ShortcutsEnabled = false;
-            this.TxtBoxMessageAbout.Size = new System.Drawing.Size(201, 38);
+            this.TxtBoxMessageAbout.Size = new System.Drawing.Size(201, 50);
             this.TxtBoxMessageAbout.TabIndex = 8;
             this.TxtBoxMessageAbout.TabStop = false;
             this.TxtBoxMessageAbout.Text = "UpGun Mod Tools Launcher\r\nCopyright 2026 ZNS - Paulem";
@@ -56,7 +56,7 @@
             // BtnAboutOk
             // 
             this.BtnAboutOk.BackColor = System.Drawing.Color.White;
-            this.BtnAboutOk.Location = new System.Drawing.Point(115, 90);
+            this.BtnAboutOk.Location = new System.Drawing.Point(120, 90);
             this.BtnAboutOk.Name = "BtnAboutOk";
             this.BtnAboutOk.Size = new System.Drawing.Size(32, 32);
             this.BtnAboutOk.TabIndex = 9;
@@ -83,6 +83,7 @@
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.BtnAboutOk);
             this.Controls.Add(this.TxtBoxMessageAbout);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;

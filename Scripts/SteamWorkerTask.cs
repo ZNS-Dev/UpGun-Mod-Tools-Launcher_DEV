@@ -28,9 +28,17 @@ namespace UpGun_Mod_Tools_Launcher
             uint appId = uint.Parse(args[1]);
             SetEnvironmentVariable("SteamAppId", appId.ToString());
 
-            if (!SteamAPI.Init())
+            //Check if Steam is running
+            if (!SteamAPI.IsSteamRunning())
             {
-                Console.WriteLine("ERROR:Steam is not running! Please start Steam and restart the application.");
+                Console.WriteLine("ERROR: Steam is not running! Please launch Steam and restart the application.");
+                return;
+            }
+
+            //Check if the user owns the game
+            if (!SteamAPI.Init() || !SteamApps.BIsSubscribedApp(new AppId_t(appId)))
+            {
+                Console.WriteLine("ERROR GAME NOT FOUND: You do not own UpGun on your Steam account.");
                 return;
             }
 
@@ -97,9 +105,15 @@ namespace UpGun_Mod_Tools_Launcher
 
                 SetEnvironmentVariable("SteamAppId", appId.ToString());
 
-                if (!SteamAPI.Init())
+                if (!SteamAPI.IsSteamRunning())
                 {
-                    Console.WriteLine("ERROR:Steam is not running! Please start Steam and restart the application.");
+                    Console.WriteLine("ERROR: Steam is not running! Please launch Steam and restart the application.");
+                    return;
+                }
+
+                if (!SteamAPI.Init() || !SteamApps.BIsSubscribedApp(new AppId_t(appId)))
+                {
+                    Console.WriteLine("ERROR GAME NOT FOUND: You do not own UpGun on your Steam account.");
                     return;
                 }
 
@@ -107,7 +121,7 @@ namespace UpGun_Mod_Tools_Launcher
                 {
                     if (bIOFailure || callback.m_eResult != EResult.k_EResultOK)
                     {
-                        Console.WriteLine("ERROR:Failed to create item on Steam. Code: " + callback.m_eResult);
+                        Console.WriteLine("ERROR: Failed to create item on Steam. Code: " + callback.m_eResult);
                         isRunning = false;
                         return;
                     }
@@ -120,18 +134,18 @@ namespace UpGun_Mod_Tools_Launcher
                 {
                     if (bIOFailure || callback.m_eResult != EResult.k_EResultOK)
                     {
-                        Console.WriteLine("ERROR:Failed to upload to Steam. Code: " + callback.m_eResult);
+                        Console.WriteLine("ERROR: Failed to upload to Steam. Code: " + callback.m_eResult);
                     }
                     else
                     {
-                        Console.WriteLine("SUCCESS:" + processedFileId.m_PublishedFileId);
+                        Console.WriteLine("SUCCESS: " + processedFileId.m_PublishedFileId);
                     }
                     isRunning = false;
                 });
 
                 if (processedFileId == PublishedFileId_t.Invalid)
                 {
-                    Console.WriteLine("PROGRESS:Creating Mod on Steam...");
+                    Console.WriteLine("PROGRESS: Creating Mod on Steam...");
                     SteamAPICall_t apiCall = SteamUGC.CreateItem(new AppId_t(appId), EWorkshopFileType.k_EWorkshopFileTypeCommunity);
                     m_CreateItem.Set(apiCall);
                 }
@@ -160,11 +174,11 @@ namespace UpGun_Mod_Tools_Launcher
                         if (bytesTotal > 0)
                         {
                             int progress = (int)((bytesProcessed * 100) / bytesTotal);
-                            Console.WriteLine($"PROGRESS:{textStatus} ({progress}%)");
+                            Console.WriteLine($"PROGRESS: {textStatus} ({progress}%)");
                         }
                         else
                         {
-                            Console.WriteLine($"PROGRESS:{textStatus}");
+                            Console.WriteLine($"PROGRESS: {textStatus}");
                         }
                     }
 

@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
+using System.Net;
 using System.Net.Http;
+using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using UpGun_Mod_Tools_Launcher.Forms;
@@ -9,7 +13,7 @@ namespace UpGun_Mod_Tools_Launcher
 {
     public partial class Form1 : Form
     {
-        private const uint TARGET_APP_ID = 311210;
+        private const uint TARGET_APP_ID = 1575870;
 
         public Form1()
         {
@@ -33,45 +37,130 @@ namespace UpGun_Mod_Tools_Launcher
 
         private async void Form1_Load(object sender, EventArgs e)
         {
+            if (toolStripTextBox2 != null && string.IsNullOrWhiteSpace(toolStripTextBox2.Text))
+            {
+                Version current = Assembly.GetExecutingAssembly().GetName().Version;
+                toolStripTextBox2.Text = $"v{current.Major}.{current.Minor}.{Math.Max(0, current.Build)}";
+            }
+
             LoadSteamWorkshop();
+
             await CheckForUpdatesAsync();
         }
 
-        /// <summary>
-        /// Récupère la dernière release sur GitHub et affiche son nom/titre dans toolStripTextBox2.
-        /// </summary>
         private async Task CheckForUpdatesAsync()
         {
             try
             {
+                string localText = toolStripTextBox2 != null ? toolStripTextBox2.Text : "";
+                Version localVersion = ExtractVersion(localText);
+
+                if (localVersion == null) return;
+
+                ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12;
+
                 using (HttpClient client = new HttpClient())
                 {
-                    // L'API GitHub requiert un header User-Agent
-                    client.DefaultRequestHeaders.Add("User-Agent", "UpGunModToolsLauncher");
+                    client.DefaultRequestHeaders.UserAgent.ParseAdd("UpGunLauncher");
 
-                    string url = "https://api.github.com/repos/ZNS-Dev/UpGun-Mod-Tools-Launcher/releases/latest";
-                    string json = await client.GetStringAsync(url);
+                    string apiUrl = "https://api.github.com/repos/ZNS-Dev/UpGun-Mod-Tools-Launcher/releases/latest";
+                    HttpResponseMessage response = await client.GetAsync(apiUrl);
 
-                    // Extraction de la propriété "name" (Nom de la release)
-                    int nameIndex = json.IndexOf("\"name\"");
-                    if (nameIndex != -1)
+                    if (!response.IsSuccessStatusCode) return;
+
+                    string json = await response.Content.ReadAsStringAsync();
+
+                    string remoteTag = ExtractJsonValue(json, "tag_name");
+                    string remoteName = ExtractJsonValue(json, "name");
+                    string downloadUrl = ExtractExeUrlFromAssets(json);
+
+                    Version remoteVersion = ExtractVersion(remoteTag) ?? ExtractVersion(remoteName);
+
+                    if (remoteVersion == null) return;
+
+                    if (remoteVersion > localVersion)
                     {
-                        int startQuote = json.IndexOf('"', json.IndexOf(':', nameIndex) + 1);
-                        int endQuote = json.IndexOf('"', startQuote + 1);
+                        DialogResult dialog = MessageBox.Show(
+                            $"A new version is available!\n\n" +
+                            $"• Current version: {localVersion}\n" +
+                            $"• New version: {remoteVersion}\n\n" +
+                            $"Would you like to download it and restart the application?",
+                            "Update Available",
+                            MessageBoxButtons.YesNo,
+                            MessageBoxIcon.Question
+                        );
 
-                        if (startQuote != -1 && endQuote != -1)
+                        if (dialog == DialogResult.Yes)
                         {
-                            string releaseName = json.Substring(startQuote + 1, endQuote - startQuote - 1);
-                            toolStripTextBox2.Text = releaseName;
+                            if (string.IsNullOrEmpty(downloadUrl))
+                            {
+                                MessageBox.Show("Error: No .exe file was found in the Release.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                return;
+                            }
+
+                            await ReplaceAndRestartAsync(client, downloadUrl);
                         }
                     }
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                // Valeur par défaut en cas d'erreur réseau
-                toolStripTextBox2.Text = "v1.0.0";
+                Debug.WriteLine($"[Update Error] {ex.Message}");
             }
+        }
+
+        private async Task ReplaceAndRestartAsync(HttpClient client, string downloadUrl)
+        {
+            try
+            {
+                string currentExePath = Application.ExecutablePath;
+                string tempExePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "update_temp.exe");
+
+                byte[] exeData = await client.GetByteArrayAsync(downloadUrl);
+                File.WriteAllBytes(tempExePath, exeData);
+
+                string cmdArgs = $"/c timeout /t 2 /nobreak > nul & move /y \"{tempExePath}\" \"{currentExePath}\" & start \"\" \"{currentExePath}\"";
+
+                ProcessStartInfo psi = new ProcessStartInfo
+                {
+                    FileName = "cmd.exe",
+                    Arguments = cmdArgs,
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    CreateNoWindow = true,
+                    UseShellExecute = true
+                };
+
+                Process.Start(psi);
+                Application.Exit();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Unable to update application: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private Version ExtractVersion(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input)) return null;
+
+            Match match = Regex.Match(input, @"\d+(\.\d+)+");
+            if (match.Success && Version.TryParse(match.Value, out Version parsed))
+            {
+                return parsed;
+            }
+            return null;
+        }
+
+        private string ExtractJsonValue(string json, string key)
+        {
+            Match match = Regex.Match(json, $"\"{key}\"\\s*:\\s*\"([^\"]+)\"");
+            return match.Success ? match.Groups[1].Value : null;
+        }
+
+        private string ExtractExeUrlFromAssets(string json)
+        {
+            Match match = Regex.Match(json, @"\""browser_download_url\""\s*:\s*\""([^\""]+\.exe)\""", RegexOptions.IgnoreCase);
+            return match.Success ? match.Groups[1].Value : null;
         }
 
         private void BtnRefreshList_Click(object sender, EventArgs e) => LoadSteamWorkshop();
@@ -88,6 +177,7 @@ namespace UpGun_Mod_Tools_Launcher
         private void LoadSteamWorkshop()
         {
             string steamErrorMessage = null;
+            bool isGameMissing = false;
 
             try
             {
@@ -108,6 +198,13 @@ namespace UpGun_Mod_Tools_Launcher
                     while ((line = process.StandardOutput.ReadLine()) != null)
                     {
                         if (string.IsNullOrWhiteSpace(line)) continue;
+
+                        if (line.StartsWith("ERROR_NO_GAME:"))
+                        {
+                            steamErrorMessage = line.Replace("ERROR_NO_GAME:", "");
+                            isGameMissing = true;
+                            break;
+                        }
 
                         if (line.StartsWith("ERROR:"))
                         {
@@ -141,11 +238,25 @@ namespace UpGun_Mod_Tools_Launcher
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error retrieving items: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error retrieving Workshop items: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             if (!string.IsNullOrEmpty(steamErrorMessage))
             {
+                if (isGameMissing)
+                {
+                    MessageBox.Show(steamErrorMessage, "Game Not Owned", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                    try
+                    {
+                        Process.Start($"steam://store/{TARGET_APP_ID}");
+                    }
+                    catch { }
+
+                    Application.Exit();
+                    return;
+                }
+
                 MessageBox.Show(steamErrorMessage, "Steam Not Detected", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Application.Exit();
                 return;
@@ -190,14 +301,9 @@ namespace UpGun_Mod_Tools_Launcher
                 {
                     double bytes = FileSize;
 
-                    if (bytes >= 1_000_000_000)
-                        return $"{bytes / 1_000_000_000.0:0.00} GB";
-
-                    if (bytes >= 1_000_000)
-                        return $"{bytes / 1_000_000.0:0.00} MB";
-
-                    if (bytes >= 1_000)
-                        return $"{bytes / 1_000.0:0.00} KB";
+                    if (bytes >= 1_000_000_000) return $"{bytes / 1_000_000_000.0:0.00} GB";
+                    if (bytes >= 1_000_000) return $"{bytes / 1_000_000.0:0.00} MB";
+                    if (bytes >= 1_000) return $"{bytes / 1_000.0:0.00} KB";
 
                     return $"{bytes} B";
                 }

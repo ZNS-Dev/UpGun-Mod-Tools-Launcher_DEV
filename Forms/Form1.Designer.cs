@@ -38,11 +38,8 @@
             this.BtnDiscordUGModding = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TxtBoxMessage = new System.Windows.Forms.TextBox();
-            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.toolStripTextBox1 = new System.Windows.Forms.ToolStripTextBox();
             this.toolStripTextBox2 = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
-            this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // BtnUpload
@@ -67,10 +64,10 @@
             // ListBoxWorkshopItem
             // 
             this.ListBoxWorkshopItem.BackColor = System.Drawing.Color.Gray;
-            this.ListBoxWorkshopItem.Font = new System.Drawing.Font("Franklin Gothic Medium", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ListBoxWorkshopItem.Font = new System.Drawing.Font("Myanmar Text", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ListBoxWorkshopItem.ForeColor = System.Drawing.SystemColors.Window;
             this.ListBoxWorkshopItem.FormattingEnabled = true;
-            this.ListBoxWorkshopItem.ItemHeight = 21;
+            this.ListBoxWorkshopItem.ItemHeight = 27;
             this.ListBoxWorkshopItem.Items.AddRange(new object[] {
             "NO TITLE! (000.00MB)",
             "NO TITLE! (000.00MB)",
@@ -160,33 +157,6 @@
             this.TxtBoxMessage.Text = resources.GetString("TxtBoxMessage.Text");
             this.TxtBoxMessage.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // toolStrip1
-            // 
-            this.toolStrip1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.toolStrip1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripTextBox1});
-            this.toolStrip1.Location = new System.Drawing.Point(0, 476);
-            this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(558, 25);
-            this.toolStrip1.TabIndex = 9;
-            this.toolStrip1.Text = "toolStrip1";
-            // 
-            // toolStripTextBox1
-            // 
-            this.toolStripTextBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.toolStripTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.toolStripTextBox1.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.toolStripTextBox1.ForeColor = System.Drawing.Color.Lime;
-            this.toolStripTextBox1.Name = "toolStripTextBox1";
-            this.toolStripTextBox1.ReadOnly = true;
-            this.toolStripTextBox1.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.toolStripTextBox1.ShortcutsEnabled = false;
-            this.toolStripTextBox1.Size = new System.Drawing.Size(100, 25);
-            this.toolStripTextBox1.Text = "Last version";
-            this.toolStripTextBox1.TextBoxTextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
             // toolStripTextBox2
             // 
             this.toolStripTextBox2.AutoSize = true;
@@ -206,13 +176,12 @@
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.ClientSize = new System.Drawing.Size(558, 501);
             this.Controls.Add(this.toolStripTextBox2);
-            this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.TxtBoxMessage);
             this.Controls.Add(this.ListBoxWorkshopItem);
             this.Controls.Add(this.BtnRefreshList);
             this.Controls.Add(this.BtnUpload);
             this.Controls.Add(this.menuStrip1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.MaximizeBox = false;
@@ -220,8 +189,6 @@
             this.Text = "UpGun Mod Tools Launcher";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            this.toolStrip1.ResumeLayout(false);
-            this.toolStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -236,8 +203,6 @@
         private System.Windows.Forms.ToolStripMenuItem BtnDiscordUG;
         private System.Windows.Forms.ToolStripMenuItem BtnDiscordUGModding;
         private System.Windows.Forms.TextBox TxtBoxMessage;
-        private System.Windows.Forms.ToolStrip toolStrip1;
-        private System.Windows.Forms.ToolStripTextBox toolStripTextBox1;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.Label toolStripTextBox2;
     }
